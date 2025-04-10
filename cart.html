@@ -297,8 +297,14 @@
     const totalItemsContainer = document.getElementById('total-items');
 
     function loadCart() {
-        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        cartItemsContainer.innerHTML = ''; 
+        let cartItems = [];
+        try {
+            cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        } catch (e) {
+            console.error("Error parsing cartItems:", e);
+            cartItems = [];
+        }
+        cartItemsContainer.innerHTML = '';
 
         let totalItems = 0;
         let totalPrice = 0;
@@ -312,16 +318,16 @@
 
         cartItems.forEach((item, index) => {
             totalItems += item.quantity;
-            totalPrice += item.price * item.quantity;
+            totalPrice += (item.mrp || item.price || 0) * item.quantity;
 
             const cartItem = document.createElement('div');
             cartItem.classList.add('cart-item');
             cartItem.innerHTML = `
                 <div class="cart-item-details">
-                    <img src="${item.image}" alt="${item.name}" width="100">
+                    <img src="${item.image || 'https://via.placeholder.com/100'}" alt="${item.name}" width="100">
                     <h3 class="company-label">${item.company}</h3>
                     <h2>${item.name}</h2>
-                    <p class="price">Rs. ${item.price.toFixed(2)}</p>
+                    <p class="price">Rs. ${(item.mrp || item.price || 0).toFixed(2)}</p>
                     <div class="quantity-selector">
                         <button class="decrease" data-index="${index}">-</button>
                         <input type="text" value="${item.quantity}" readonly>
@@ -338,8 +344,16 @@
     }
 
     cartItemsContainer.addEventListener('click', (event) => {
-        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        let cartItems = [];
+        try {
+            cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        } catch (e) {
+            console.error("Error parsing cartItems:", e);
+            return;
+        }
         const index = event.target.dataset.index;
+
+        if (index === undefined || !cartItems[index]) return;
 
         if (event.target.classList.contains('increase')) {
             cartItems[index].quantity++;
@@ -357,23 +371,27 @@
         loadCart();
     });
 
-    // Checkout button logic
     document.getElementById("checkout-button").addEventListener("click", () => {
-        const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        let cartItems = [];
+        try {
+            cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        } catch (e) {
+            console.error("Error parsing cartItems:", e);
+            return;
+        }
         const transformedCart = cartItems.map(item => ({
             name: item.name,
             company: item.company,
-            mrp: item.price, // Rename price to mrp for consistency
-            productId: item.productId || "", // Default to empty if not present
+            mrp: item.mrp || item.price || 0,
+            productId: item.productId || "",
             quantity: item.quantity
         }));
-        localStorage.setItem("cartItems", JSON.stringify(transformedCart)); // Keep as cartItems
-        window.location.href = "customer-details.html"; // Ensure this matches your file name
+        localStorage.setItem("cartItems", JSON.stringify(transformedCart));
+        window.location.href = "https://romerina.github.io/Romerina/customer-details.html";
     });
 
     loadCart();
 });
-
         function oriflame(){
             window.location.href="oriflame.html";
         }

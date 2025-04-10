@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROMERINA - Skincare</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F8F8F8;
+            color: #1E1E1E;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background-color: #FFFFFF;
+            color: #1E1E1E;
+            padding: 1rem 0;
+            border-bottom: 1px solid #DDDDDD;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .logo img {
+            height: 40px;
+            margin-right: 15px;
+        }
+        .slogan {
+            font-size: 0.9rem;
+            color: #A65A46;
+            margin-top: 2px;
+            display: block;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            margin-left: 30px;
+        }
+        nav ul li a {
+            color: #1E1E1E;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            min-width: 200px;
+            padding: 10px 0;
+            list-style: none;
+        }
+        .dropdown-menu a {
+            padding: 10px 20px;
+            display: block;
+            color: #1E1E1E;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        .dropdown-menu a:hover {
+            background: #F1F1F1;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        nav ul li a:hover {
+            color: #A65A46;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 100px;
+        }
+        .product-section {
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+            padding: 20px;
+        }
+        .product-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Ensures all cards have the same height */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+        .company-label {
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .product-card h2 {
+            margin-top: 5px;
+            font-size: 1.2rem;
+            color: #A65A46;
+        }
+        .product-card p {
+            font-size: 1rem;
+            color: #555;
+        }
+        .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
+        .add-to-cart {
+    background-color: #A65A46;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+    width: 100%;
+    margin-top: auto; /* Ensures it stays at the bottom */
+}
+
+.add-to-cart:hover {
+    background-color: #8C4537;
+}
+.more-options {
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            display: inline-block;
+            padding: 5px;
+            margin-left: 5px;
+        }
+        .more-options::before {
+            content: "🛈";
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        .tooltip-box {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            left: 50%;
+            top: 100%;
+            transform: translateX(-50%);
+            white-space: normal;
+            width: 440px;
+            text-align: left;
+            z-index: 10;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .tooltip-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .tooltip-box::-webkit-scrollbar-thumb {
+            background: #aaa;
+            border-radius: 5px;
+        }
+        .image-slider {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    scroll-snap-type: x mandatory;
+}
+
+.image-slider img {
+    width: 100%;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    transition: transform 0.5s ease-in-out;
+}
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+}
+
+        .cart-button {
+    position: fixed;
+    bottom: 40px; /* Adjust to place above the footer */
+    right: 20px;
+    width: 50px;  /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+    cursor: pointer;
+    border-radius: 50%; /* Makes it circular if needed */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease-in-out;
+    background-color: white; /* Add background if needed */
+    padding: 5px;
+}
+
+.cart-button:hover {
+    transform: scale(1.1);
+}
+footer {
+            background-color: #1E1E1E;
+            color: white;
+            text-align: center;
+            padding: 35px 0;
+            font-size: 0.9rem;
+            margin-top: 50px;
+        }
+    </style>
+    
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" style="height: 90px; margin-right: 10px; vertical-align: middle;"> 
+                <div>
+                    ROMERINA
+                    <span class="slogan">FOR. HIM HER. & TOTS</span>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Shop</a>
+                    <div class="dropdown-menu">
+                    <a href="#" onclick="oriflame()">ORIFLAME</a>
+                    <a href="#" >PILGRIM</a>
+                    <a href="#">OTHER</a>
+                    </div>
+                    </li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section class="product-section">
+        <div class="container">
+            <div class="section-title">Nutrition Collection</div>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="Nutrishake Natural Strawberry Flavour.webp" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="Nutrishake Natural Strawberry Flavour2.webp" alt="Product Image 2" onclick="openLightbox(this)">
+                        </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Nutrishake Natural Strawberry Flavour</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>Protein powder with dietary fibre to increase the protein in your diet. Enjoy as a nutritious shake or add to recipes. Natural flavouring.
+                            <ul>
+                                <li>High protein – whey, soy, and pea - 7.5g per 18g serve</li>
+                                <li>High in dietary fibre – rosehip, sugar beet, and apple – 1.8g per 18g serve</li>
+                                <li>66 kcal per 18g serve when mixed with water</li>
+                            </ul>This versatile protein powder contains dietary fibre and is a great way to increase the protein and fibre content in your diet. The naturally sourced proteins provide all the amino acids your body cannot make. You can enjoy Nutrishake as a nutritious shake for a healthy snack, or add it to increase the protein & dietary fibre in your recipes. It’s a good idea to consume protein regularly throughout the day – every day – Nutrishake enables you to do just that!</p>
+                            <h4>Ingredients</h4>
+                            <p>Pea protein (Pisum sativum L.) (30.4%), Milk solids (Sweet whey powder) (19.3%), Apple powder (Apple (Malus pumila L.), Maize starch) (15.5%), Soy protein isolate (13.0%), Rosehip powder (Rosa canina L.) (8.6%), Milk Solids (Whey protein concentrate) (5.3%), Sugar beet fibre (4.4%), Natural flavourings, Beetroot juice powder (Maltodextrin, Red beet juice concentrate (Beta vulgaris L.), Citric acid (INS330)), Sweetener (Sucralose), Antioxidant (L-ascorbic acid, DL-alpha-tocopheryl acetate).</p>
+                    <h4>How To Use</h4>
+                <p>High-protein strawberry shake<br>
+
+                    Enjoy a shake as a snack between meals 1-2x a day<br>
+                    Add 18g (approx. 2 tablespoons) of Nutrishake powder to 150 ml (approx. 2/3 cup) cold water<br>
+                    Blend or shake well until fully dissolved<br>
+                    Consume instantly & enjoy!<br><br>
+                    
+                    Increase the protein content of food:<br>
+                    Blend a spoonful into yoghurt<br>
+                    Add to sweet baked goods<br>
+                    Make high protein berry pancakes<br>
+                    Make your own high protein strawberry dessert<br>
+                    The only limit is your imagination!<br><br>
+                    
+                    Build a new, healthy habit!<br>
+                    Simply keep Nutrishake within reach of where you cook and add to whatever’s on the menu!<br>
+                    Keep a portion of Nutrishake in a shaker in your bag so you always have a healthy snack with you when you’re on the go. Just add water and shake wherever you are!</p>
+                    <h4>Expiry Details</h4>
+                <p>Expiry or best before dates are available on the product packaging. Please check the product for this information.</p>
+            </div>
+                    <div class="price">MRP Rs. 3,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="Nutri-Veg Set-Chocolate.webp" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="Nutri-Veg Set-Chocolate 2.webp" alt="Product Image 2" onclick="openLightbox(this)">
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Nutri-Veg Set - Chocolate</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>THIS SET INCLUDES:
+                            <ul>
+                                <li>Nutrishake Natural Chocolate Flavour. 500 g.</li>
+                                <li>Multivitamin & Mineral. 30 tablets. 29.1g.</li>
+                            </ul>NUTRISHAKE:<br>
+                            It is a high-protein ready-to-mix shake formula containing protein from soy, milk (whey) & peas, and
+                            dietary fibre from apple, rosehip & sugar beet. Protein contributes to the maintenance and growth
+                            of muscle mass.<br><br> MULTIVITAMIN & MINERAL:<br>
+                            A perfect way to top up on those essential vitamins and minerals to secure an adequate intake of
+                            micronutrients every day! This multivitamin tablet provides 22 vitamins and minerals essential for
+                            health – precision-formulated to support a balanced diet and help meet adult nutritional needs.
+                        </p>
+                    <h4>How To Use</h4>
+                <p>NUTRISHAKE: High-protein shake Enjoy a shake as a snack between meals 1-2x a day Add 18g
+                    (approx. 2 tablespoons) of Nutrishake powder to 150 ml (approx. 2/3 cup) cold water.<br>Blend or shake well until fully dissolved Consume instantly & enjoy!</p>
+                    <h4>Expiry Details</h4>
+                <p>Expiry or best before dates are available on the product packaging. Please check the product for this
+                    information.</p>
+            </div>
+                    <div class="price">MRP Rs. 4,698</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="Nutrishake Natural Chocolate Flavour.webp" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="Nutrishake Natural Chocolate Flavour 2.webp" alt="Product Image 2" onclick="openLightbox(this)">
+                        </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Nutrishake Natural Chocolate Flavour</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>Protein powder with dietary fibre. Enjoy as a nutritious shake or add to recipes to increase the
+                            protein and dietary fibre content of food. Natural flavouring.
+                            <ul>
+                                <li>High protein – whey, soy, and pea – 7.9g per 18g serve</li>
+                                <li>High dietary fibre – rosehip, sugar beet, and apple – 1.9g per 18g serve.</li>
+                                <li>67 calories per 18g serve when mixed with water</li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                    <h6>High-protein chocolate shake:</h6>
+                <p>Enjoy a shake as a snack between meals 1-2x a day<br>
+                     Add 18g (approx. 2 tablespoons) of Nutrishake powder to 150ml (approx. 2/3 cup) cold
+                    water<br>
+                     Blend or shake well until fully dissolved<br>
+                     Enjoy!</p>
+                <h6>Increase the protein content of food:h6>
+                <p>Blend a spoonful into yoghurt<br>
+                     Add to sweet baked goods<br>
+                     Make high protein chocolate pancakes<br>
+                     Make your own high protein chocolate dessert<br>
+                     The only limit is your imagination!</p>
+                <h6>Build a new, healthy habit!</h6>
+                <p>Simply keep Nutrishake within reach of where you cook!<br>
+                     Keep a portion of Nutrishake in a shaker in your bag so you always have a healthy snack
+                    with you when you’re on the go. Just add water and shake wherever you are!</p>
+                    <h4>Ingredients</h4>
+                    <p>Pea protein (Pisum sativum L.) (25.8%), Milk solids (Sweet whey powder) (15.8%), Apple powder
+                        (Apple (Malus pumila L.), Maize starch) (13.4%), Soya protein isolate (12.9%), Milk Solids (Whey
+                        protein concentrate) (9.6%), Rosehip powder (Rosa canina L.) (7.7%), Fat reduced cocoa powder
+                        (7.6%), Natural flavourings, Sugar beet fibre (2.2%), Sweetener (Sucralose), Antioxidant (L-ascorbic
+                        acid &amp; DL-alpha-tocopheryl acetate).</p>
+                    <h4>Expiry Details</h4>
+                <p>Expiry or best before dates are available on the product packaging. Please check the product for this
+                    information.</p>
+            </div>
+                    <div class="price">MRP Rs. 3,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="Astaxanthin & Bilberry Extract.webp" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="Astaxanthin & Bilberry Extract 2.webp" alt="Product Image 2" onclick="openLightbox(this)">
+                        </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Astaxanthin & Bilberry Extract</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>Daily antioxidant food supplement. Combination of antioxidants, including natural Astaxanthin,
+                            Bilberry extract and Vitamins C and E. Helps protect your body’s cells against damaging free radicals.
+                            <ul>
+                                <li>Astaxanthin – one of nature’s most powerful antioxidants (Nishida et al., 2007)</li>
+                                <li>Bilberry – one of the richest sources of anthocyanins (Bornsek et al., 2012)</li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p>Take 1-2 capsules daily with water and a meal.<br>
+                    Build a new, healthy habit!<br>
+                    Get into the habit of taking Astaxanthin by keeping it close at hand and take it with the same meal
+                    every day.<br>
+                    Note: Wellosophy Astaxanthin &amp; Bilberry Extract is designed to supplement – not replace – a
+                    healthy, balanced diet.</p>
+                    <h4>Ingredients</h4>
+                    <p>Sunflower oil, Capsule shell (Fish Gelatine, Humectant (Glycerol)), Haematococcus pluvialis L. ((5%
+                        Astaxanthin) Emulsifier (Sunflower lecithin), D-alpha-tocopherol, L-ascorbyl 6-palmitate)), Bilberry
+                        extract 4:1 (Vaccinium myrtillus), Thickener (Beeswax), L-ascorbic acid (Vitamin C), Emulsifier
+                        (Soy lecithin), D-alpha-tocopherol (vitamin E).</p>
+                    <h4>Expiry Details</h4>
+                <p>Expiry or best before dates are available on the product packaging. Please check the product for this
+                    information.</p>
+            </div>
+                    <div class="price">MRP Rs. 2,099</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="Nutri-Veg Set-Vanilla.webp" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="Nutri-Veg Set-Vanilla 2.webp" alt="Product Image 2" onclick="openLightbox(this)">
+                        </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Nutri-Veg Set - Vanilla</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>THIS SET INCLUDES:
+                            <ul>
+                                <li>Nutrishake Natural Vanilla Flavour. 500 g.</li>
+                                <li>• Multivitamin &amp; Mineral. 30 tablets. 29.1g.</li>
+                            </ul>
+                            NUTRISHAKE: It is a high-protein ready-to-mix shake formula containing protein from soy, milk
+(whey) &amp; peas, and dietary fibre from apple, rosehip &amp; sugar beet. Protein contributes to the
+maintenance and growth of muscle mass. <br>MULTIVITAMIN &amp; MINERAL: A perfect way to top up on
+those essential vitamins and minerals to secure an adequate intake of micronutrients every day! This
+multivitamin tablet provides 22 vitamins and minerals essential for health – precision-formulated to
+support a balanced diet and help meet adult nutritional needs.
+                        </p>
+                    <h4>Expiry Details</h4>
+                <p>Expiry or best before dates are available on the product packaging. Please check the product for this
+                    information.</p>
+            </div>
+                    <div class="price">MRP Rs. 4,698</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="Nutri-Veg Set-Strawberry 3.webp" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="Nutri-Veg Set-Strawberry 2.webp" alt="Product Image 2" onclick="openLightbox(this)">
+                        </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Nutri-Veg Set - Strawberry</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>THIS SET INCLUDES:
+                            <ul>
+                                <li>Nutrishake Natural Strawberry Flavour. 500 g.</li>
+                                <li>Multivitamin &amp; Mineral. 30 tablets. 29.1g.</li>
+                            </ul>
+                            NUTRISHAKE: It is a high-protein ready-to-mix shake formula containing protein from soy, milk
+(whey) &amp; peas, and dietary fibre from apple, rosehip &amp; sugar beet. Protein contributes to the
+maintenance and growth of muscle mass. <br>MULTIVITAMIN &amp; MINERAL: A perfect way to top up on
+those essential vitamins and minerals to secure an adequate intake of micronutrients every day! This
+multivitamin tablet provides 22 vitamins and minerals essential for health – precision-formulated to
+support a balanced diet and help meet adult nutritional needs.
+                        </p>
+                    <h4>How To Use</h4>
+                <p>NUTRISHAKE:<br>Enjoy a shake as a snack between meals 1-2x a day Add 18g (approx. 2 tablespoons) of Nutrishake
+                    powder to 150 ml (approx. 2/3 cup) cold water Blend or shake well until fully dissolved Consume
+                    instantly &amp; enjoy!<br>Increase the protein content of food: <br>Blend a spoonful into yoghurt<br>
+                    Add to sweet baked goods<br>
+                    Make high protein berry pancakes<br>
+                    Make your own high protein dessert<br>
+                    The only limit is your imagination</p>
+                    <h4>Expiry Details</h4>
+                <p>Expiry or best before dates are available on the product packaging. Please check the product for this
+                    information.</p>
+            </div>
+                    <div class="price">MRP Rs. 4,698</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="Multivitamin & Mineral.webp" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="Multivitamin & Mineral 2.webp" alt="Product Image 2" onclick="openLightbox(this)">
+                        </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Multivitamin & Mineral</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>A perfect way to top up on those essential vitamins and minerals to secure an adequate intake of
+                            micronutrients every day! This multivitamin tablet provides 22 vitamins and minerals essential for
+                            health – precision-formulated to support a balanced diet and help meet adult nutritional needs.
+                            
+                    <h4>Expiry Details</h4>
+                <p>Expiry or best before dates are available on the product packaging. Please check the product for this
+                    information.</p>
+            </div>
+                    <div class="price">MRP Rs. 749</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="Health Set Choclate.webp" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="Health Set chocolate 2.webp" alt="Product Image 2" onclick="openLightbox(this)">
+                        </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Health Set - Chocolate</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>THIS SET INCLUDES:
+                            <ul>
+                                <li>Nutrishake Natural Chocolate Flavour. 500 g.</li>
+                                <li>Omega 3. 60 capsules. 41.6 g</li>
+                            </ul>NUTRISHAKE: It is a high-protein ready-to-mix shake formula containing protein from soy, milk (whey) & peas, and dietary fibre from apple, rosehip & sugar beet. Protein contributes to the maintenance and growth of muscle mass.<br>
+                            OMEGA 3: It is a daily food supplement food supplement made with fish oil that provides the body with 250 mg of omega-3 fatty acids – eicosapentaenoic acid (EPA) & docosahexaenoic acid (DHA). EPA & DHA help to maintain the normal function of the heart, vision and brain.<br>
+                            * Food supplements should not be used as a substitute for a balanced and varied diet
+                        </p>
+                    <h4>Expiry Details</h4>
+                <p> 24 months* from date of manufacture (*applicable for most of the products, please refer to the actual product for an exact date. Dates may vary from product to product).</p>
+            </div>
+                    <div class="price">MRP Rs. 5,198</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="WellBeing Health Set Chocolate.webp" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="WellBeing Health Set Chocolate2.webp" alt="Product Image 2" onclick="openLightbox(this)">
+                        </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Well-being Health Set - Chocolate</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>Everyday health and wellbeing made easy with Wellosophy Well-being Health Set! Wellness Pack – convenient daily sachets of important dietary supplements; Nutrishake for healthy, high protein snacking.<br><br>
+                            Precision-formulated for overall health and wellbeing<br><br>
+                            
+                            Wellness Pack: 30 individual sachets – one daily including 1x multivitamin tablet, 2x omega-3 capsules, 1x antioxidant capsule with natural astaxanthin<br><br>
+                            
+                            Nutrishake Natural Chocolate Flavour: high protein, source of fibre
+                            <ul>
+                                <li>Nutrishake Natural Chocolate Flavour 500g.</li>
+                                <li>Wellness Pack 30 sachets per box – one sachet daily. 92.4g (30 x 3.08g)</li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p>Wellosophy Wellness Pack:<br>
+                    Take one sachet daily with water and a meal.<br>
+                    Avoid tea and coffee.<br><br>
+                    
+                    Nutrishake Natural Chocolate Flavour:<br>
+                    Enjoy a shake as a snack between meals 1-2x a day<br>
+                    Add 18g (approx. 2 tablespoons) of Nutrishake powder to 150ml cold water or milk and blend or shake well<br>
+                    Blend one or two tablespoons into a bowl of yoghurt<br>
+                    Add a spoonful to oatmeal<br>
+                    Blend one or two tablespoons with yoghurt and fruits for a protein smoothie<br>
+                    Experiment with flavours – blend with your favourite milk, fruits or spices<br>
+                    Add a tablespoon to sweet baked goods, like pancakes, to increase the protein and fibre content</p>
+                    <h4>Expiry Details</h4>
+                <p>Use Before/Expiry: 24 months* from date of manufacture (*applicable for most of the products, please refer to the actual product for an exact date. Dates may vary from product to product).</p>
+            </div>
+                    <div class="price">MRP Rs. 6,598</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Nutri-Veg Set - Chocolate</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>Description
+                            <ul>
+                                <li>Nutrishake Natural Chocolate Flavour. 500 g.</li>
+                                <li>Multivitamin &amp; Mineral. 30 tablets. 29.1g.</li>
+                            </ul>
+                            NUTRISHAKE:<br>
+It is a high-protein ready-to-mix shake formula containing protein from soy, milk (whey) &amp; peas, and
+dietary fibre from apple, rosehip &amp; sugar beet. Protein contributes to the maintenance and growth
+of muscle mass. <br>MULTIVITAMIN &amp; MINERAL:<br>
+A perfect way to top up on those essential vitamins and minerals to secure an adequate intake of
+micronutrients every day! This multivitamin tablet provides 22 vitamins and minerals essential for
+health – precision-formulated to support a balanced diet and help meet adult nutritional needs.
+                        </p>
+                    <h4>How To Use</h4>
+                <p>NUTRISHAKE:  High-protein shake Enjoy a shake as a snack between meals 1-2x a day Add 18g
+                    (approx. 2 tablespoons) of Nutrishake powder to 150 ml (approx. 2/3 cup) cold water.<br>
+                    Blend or shake well until fully dissolved Consume instantly &amp; enjoy!</p>
+                    <h4>Expiry Details</h4>
+                <p>Expiry or best before dates are available on the product packaging. Please check the product for this
+                    information.</p>
+            </div>
+                    <div class="price">MRP Rs. 4,048</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Nutri-Veg Set - Vanilla</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 4,048</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Well-being Weight Management Set Vanilla</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 5,897</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>NutriMeal Vanilla Flavour</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Iron Complex</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 399</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Wellness Pack</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Calcium, Vitamin D & Magnesium</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 799</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Well-being Weight Management Set Chocolate</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 5,897</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>NutriMeal Chocolate Flavour</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Nutri-Veg Set Strawberry</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 4,048</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Health Set Strawberry</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 5,198</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Health Set Vanilla</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 5,198</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Well-being Health Set Vanilla</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 6,598</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Well-being Health Set Strawberry</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 6,598</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Omega 3</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Calcium, Vitamin D & Magnesium</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 449</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Nutrishake Natural Vanilla Flavour</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Smartshake Bottle</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Scoop</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 349</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Facial Roller</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Gua Sha</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                     <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 699</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                <!-- Lightbox Container -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img">
+</div>
+            </div>
+        </div>
+    </section>
+    <img src="cart.png" alt="Cart" class="cart-button" onclick="Cart()">
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ROMERINA. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        document.querySelectorAll('.image-slider').forEach(slider => {
+    let images = slider.querySelectorAll('img');
+    let index = 0;
+
+    setInterval(() => {
+        index = (index + 1) % images.length;
+        slider.scrollTo({
+            left: index * slider.clientWidth,
+            behavior: "smooth"
+        });
+    }, 3000); // Change image every 3 seconds
+});
+
+function openLightbox(img) {
+    document.getElementById("lightbox").style.display = "flex";
+    document.getElementById("lightbox-img").src = img.src;
+}
+
+function closeLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+}
+
+        function oriflame(){
+            window.location.href="oriflame.html";
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const productCard = button.closest('.product-card');
+            const productName = productCard.querySelector('h2').innerText;
+            const productPrice = parseInt(productCard.querySelector('.price').innerText.replace(/[^\d]/g, ''), 10); // Ensure correct integer price
+            const productImage = productCard.querySelector('img').src;
+            const productCompany = productCard.querySelector('.company-label').innerText;
+
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const existingItem = cartItems.find(item => item.name === productName);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({
+                    company: productCompany,
+                    name: productName,
+                    price: productPrice,
+                    image: productImage,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            alert(`${productName} added to cart!`);
+        });
+    });
+});
+        function home(){
+            window.location.href="home.html";
+        }
+        function toggleTooltip(event, element) {
+            let tooltip = element.parentElement.nextElementSibling;
+            let isVisible = tooltip.style.display === "block";
+            document.querySelectorAll(".tooltip-box").forEach(box => box.style.display = "none");
+            if (!isVisible) {
+                tooltip.style.display = "block";
+            }
+        }
+
+        document.addEventListener("click", function(event) {
+            if (!event.target.classList.contains("more-options")) {
+                document.querySelectorAll(".tooltip-box").forEach(box => box.style.display = "none");
+            }
+        });
+        function Cart(){
+            window.location.href="cart.html";
+         }
+    </script>
+</body>
+</html>

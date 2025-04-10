@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROMERINA - Welcome</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F8F8F8;
+            color: #1E1E1E;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background-color: #FFFFFF;
+            color: #1E1E1E;
+            padding: 1rem 0;
+            border-bottom: 1px solid #DDDDDD;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .logo img {
+            height: 40px;
+            margin-right: 15px;
+        }
+        .slogan {
+            font-size: 0.9rem;
+            color: #A65A46;
+            margin-top: 2px;
+            display: block;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            margin-left: 30px;
+        }
+        nav ul li a {
+            color: #1E1E1E;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            min-width: 200px;
+            padding: 10px 0;
+            list-style: none;
+        }
+        .dropdown-menu a {
+            padding: 10px 20px;
+            display: block;
+            color: #1E1E1E;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        .dropdown-menu a:hover {
+            background: #F1F1F1;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        nav ul li a:hover {
+            color: #A65A46;
+        }
+        .hero {
+            text-align: center;
+            padding: 250px 40px 120px;
+            color: #1E1E1E;
+            background: url('hero-bg.jpg') no-repeat center;
+            background-size: cover;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #A65A46;
+        }
+        .hero p {
+            font-size: 1.8rem;
+            max-width: 900px;
+            margin: auto;
+        }
+        .cta-button {
+            background-color: #A65A46;
+            color: white;
+            padding: 18px 42px;
+            font-size: 22px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 40px;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .cta-button:hover {
+            background-color: #8C4537;
+        }
+        .features {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: 80px 40px;
+            background: white;
+        }
+        .feature {
+            flex: 0 0 auto;
+            width: 400px;
+            margin-right: 30px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.1);
+            opacity: 0.5;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            scroll-snap-align: center;
+        }
+        .feature.active {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        .feature h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        .content {
+            font-size: 22px;
+            color: #333;
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 900px;
+            margin: auto;
+            line-height: 1.6;
+        }
+        footer {
+            background-color: #1E1E1E;
+            color: white;
+            text-align: center;
+            padding: 35px 0;
+            font-size: 0.9rem;
+            margin-top: 50px;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let features = document.querySelectorAll(".feature");
+            let featureContainer = document.querySelector(".features");
+
+            // Start with the middle feature highlighted
+            let middleIndex = Math.floor(features.length / 2);
+            features[middleIndex].classList.add("active");
+            featureContainer.scrollLeft = features[middleIndex].offsetLeft - (featureContainer.clientWidth / 2) + (features[middleIndex].clientWidth / 2);
+
+            function highlightFeature() {
+                let containerCenter = featureContainer.clientWidth / 2;
+                let closestFeature = null;
+                let minDistance = Infinity;
+
+                features.forEach(feature => {
+                    let featureCenter = feature.offsetLeft + (feature.offsetWidth / 2) - featureContainer.scrollLeft;
+                    let distance = Math.abs(featureCenter - containerCenter);
+                    
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestFeature = feature;
+                    }
+                });
+
+                features.forEach(feature => feature.classList.remove("active"));
+                if (closestFeature) closestFeature.classList.add("active");
+            }
+
+            featureContainer.addEventListener("scroll", highlightFeature);
+        });
+        function oriflame(){
+            window.location.href="oriflame.html";
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" style="height: 90px; margin-right: 10px; vertical-align: middle;"> 
+                <div>
+                    ROMERINA
+                    <span class="slogan">FOR. HIM HER. & TOTS</span>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Shop</a>
+                    <div class="dropdown-menu">
+                    <a href="#" onclick="oriflame()">ORIFLAME</a>
+                    <a href="#" >PILGRIM</a>
+                    <a href="#">OTHER</a>
+                    </div>
+                    </li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section class="hero">
+        <h1>Experience the Future of Shopping</h1>
+        <p>Seamless, elegant, and designed for you.</p>
+        <a class="cta-button" href="#">Discover Now</a>
+    </section>
+    <section class="features">
+        <div class="feature  active">
+            <h3></h3>
+            <p></p>
+        </div>
+        <div class="feature">
+            <h3>Premium Selection</h3>
+            <p>Handpicked products from top brands.</p>
+        </div>
+        <div class="feature">
+            <h3>Luxury Experience</h3>
+            <p>A refined shopping journey, tailored for you.</p>
+        </div>
+        <div class="feature">
+            <h3>Seamless Checkout</h3>
+            <p>Fast, secure, and hassle-free purchases.</p>
+        </div>
+        <div class="feature">
+            <h3>Exclusive Deals</h3>
+            <p>Unlock special discounts and offers.</p>
+        </div>
+        <div class="feature">
+            <h3>Customer Support</h3>
+            <p>24/7 support for all your shopping needs.</p>
+        </div>
+        <div class="feature">
+            <h3></h3>
+            <p></p>
+        </div>
+    </section>
+    <section> <div class="content"> <p>ROMERINA is more than just shopping—it's an experience. We bring together elegance, technology, and convenience to give you the best in online retail.</p> </div> </section>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ROMERINA. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

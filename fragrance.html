@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROMERINA - Skincare</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F8F8F8;
+            color: #1E1E1E;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background-color: #FFFFFF;
+            color: #1E1E1E;
+            padding: 1rem 0;
+            border-bottom: 1px solid #DDDDDD;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .logo img {
+            height: 40px;
+            margin-right: 15px;
+        }
+        .slogan {
+            font-size: 0.9rem;
+            color: #A65A46;
+            margin-top: 2px;
+            display: block;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            margin-left: 30px;
+        }
+        nav ul li a {
+            color: #1E1E1E;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            min-width: 200px;
+            padding: 10px 0;
+            list-style: none;
+        }
+        .dropdown-menu a {
+            padding: 10px 20px;
+            display: block;
+            color: #1E1E1E;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        .dropdown-menu a:hover {
+            background: #F1F1F1;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        nav ul li a:hover {
+            color: #A65A46;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 100px;
+        }
+        .product-section {
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+            padding: 20px;
+        }
+        .product-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Ensures all cards have the same height */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+        .company-label {
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .product-card h2 {
+            margin-top: 5px;
+            font-size: 1.2rem;
+            color: #A65A46;
+        }
+        .product-card p {
+            font-size: 1rem;
+            color: #555;
+        }
+        .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
+        .add-to-cart {
+    background-color: #A65A46;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+    width: 100%;
+    margin-top: auto; /* Ensures it stays at the bottom */
+}
+
+.add-to-cart:hover {
+    background-color: #8C4537;
+}
+.more-options {
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            display: inline-block;
+            padding: 5px;
+            margin-left: 5px;
+        }
+        .more-options::before {
+            content: "🛈";
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        .tooltip-box {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            left: 50%;
+            top: 100%;
+            transform: translateX(-50%);
+            white-space: normal;
+            width: 220px;
+            z-index: 10;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .tooltip-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .tooltip-box::-webkit-scrollbar-thumb {
+            background: #aaa;
+            border-radius: 5px;
+        }
+        .cart-button {
+    position: fixed;
+    bottom: 40px; /* Adjust to place above the footer */
+    right: 20px;
+    width: 50px;  /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+    cursor: pointer;
+    border-radius: 50%; /* Makes it circular if needed */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease-in-out;
+    background-color: white; /* Add background if needed */
+    padding: 5px;
+}
+
+.cart-button:hover {
+    transform: scale(1.1);
+}
+footer {
+            background-color: #1E1E1E;
+            color: white;
+            text-align: center;
+            padding: 35px 0;
+            font-size: 0.9rem;
+            margin-top: 50px;
+        }
+    </style>
+    <script>
+        function oriflame(){
+            window.location.href="oriflame.html";
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const productCard = button.closest('.product-card');
+            const productName = productCard.querySelector('h2').innerText;
+            const productPrice = parseInt(productCard.querySelector('.price').innerText.replace(/[^\d]/g, ''), 10); // Ensure correct integer price
+            const productImage = productCard.querySelector('img').src;
+            const productCompany = productCard.querySelector('.company-label').innerText;
+
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const existingItem = cartItems.find(item => item.name === productName);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({
+                    company: productCompany,
+                    name: productName,
+                    price: productPrice,
+                    image: productImage,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            alert(`${productName} added to cart!`);
+        });
+    });
+});
+        function Cart(){
+            window.location.href="cart.html";
+         }
+        function home(){
+            window.location.href="home.html";
+        }
+        function toggleTooltip(event, element) {
+            let tooltip = element.parentElement.nextElementSibling;
+            let isVisible = tooltip.style.display === "block";
+            document.querySelectorAll(".tooltip-box").forEach(box => box.style.display = "none");
+            if (!isVisible) {
+                tooltip.style.display = "block";
+            }
+        }
+
+        document.addEventListener("click", function(event) {
+            if (!event.target.classList.contains("more-options")) {
+                document.querySelectorAll(".tooltip-box").forEach(box => box.style.display = "none");
+            }
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" style="height: 90px; margin-right: 10px; vertical-align: middle;"> 
+                <div>
+                    ROMERINA
+                    <span class="slogan">FOR. HIM HER. & TOTS</span>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Shop</a>
+                    <div class="dropdown-menu">
+                    <a href="#" onclick="oriflame()">ORIFLAME</a>
+                    <a href="#" >PILGRIM</a>
+                    <a href="#">OTHER</a>
+                    </div>
+                    </li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section class="product-section">
+        <div class="container">
+            <div class="section-title">Fragrance Collection</div>
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="image1.png" alt="Femme Weekend Perfumed Body Cream">
+                    <div class="company-label">ECLAT</div>
+                    <h2>Femme Weekend Perfumed Body Cream</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,099</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image2.png" alt="Caring Fragrance Mist with Organic Oat & Apricot">
+                    <div class="company-label">LOVE NATURE</div>
+                    <h2>Caring Fragrance Mist with Organic Oat & Apricot</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image3.png" alt="Eau de Parfum">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 2,999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image4.png" alt="Exclusive Eau de Parfum">
+                    <div class="company-label">DIVINE</div>
+                    <h2>Exclusive Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image5.png" alt="Mister Giordani Eau de Toilette">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Mister Giordani Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,099</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image6.png" alt="Perfumed Body Cream">
+                    <div class="company-label">LOVE POTION</div>
+                    <h2>Perfumed Body Cream</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,099</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image7.png" alt="Exclusive Perfumed Body Cream">
+                    <div class="company-label">DIVINE</div>
+                    <h2>Exclusive Perfumed Body Cream</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,099</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image8.png" alt="For Him Eau de Parfum">
+                    <div class="company-label">NORDIC WATERS</div>
+                    <h2>For Him Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,099</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image9.png" alt="Dark Wood Eau de Toilette">
+                    <div class="company-label">MEN'S COLLECTION</div>
+                    <h2>Dark Wood Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image10.png" alt="Delicate Cherry Blossom Eau de Toilette">
+                    <div class="company-label">WOMEN'S COLLECTION</div>
+                    <h2>Delicate Cherry Blossom Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image11.png" alt="Innocent White Lilac Eau de Toilette">
+                    <div class="company-label">WOMEN'S COLLECTION</div>
+                    <h2>Innocent White Lilac Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image12.png" alt="Toujours Eau de Toilette">
+                    <div class="company-label">ECLAT</div>
+                    <h2>Toujours Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 2,899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image13.png" alt="Perfumed Roll-on Deodorant">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Perfumed Roll-on Deodorant</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 279</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image14.png" alt="Eau de Parfum">
+                    <div class="company-label">DIVINE</div>
+                    <h2>Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image15.png" alt="Essenza Parfum">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Essenza Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 5,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image16.png" alt="Perfumed Body Cream">
+                    <div class="company-label">AMBER ELIXIR</div>
+                    <h2>Perfumed Body Cream</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="eclat_femme.png" alt="Eclat Femme Weekend Eau de Toilette">
+                    <div class="company-label">ECLAT</div>
+                    <h2>Femme Weekend Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="possess_body_cream.png" alt="Possess Perfumed Body Cream">
+                    <div class="company-label">POSSESS</div>
+                    <h2>Perfumed Body Cream</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,099</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="love_nature_mist.png" alt="Love Nature Energising Fragrance Mist">
+                    <div class="company-label">LOVE NATURE</div>
+                    <h2>Energising Fragrance Mist with Organic Mint & Raspberry</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="joyce_turquoise.png" alt="Joyce Turquoise Eau de Toilette">
+                    <div class="company-label">JOYCE</div>
+                    <h2>Turquoise Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,699</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="eclat_amour.png" alt="Eclat Amour Intensité Eau de Toilette">
+                    <div class="company-label">ECLAT</div>
+                    <h2>Amour Intensité Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 2,799</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="venture.png" alt="Venture Eau de Toilette">
+                    <div class="company-label">VENTURE</div>
+                    <h2>Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 2,599</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="all_or_nothing.png" alt="All or Nothing Amplified Parfum">
+                    <div class="company-label">ALL OR NOTHING</div>
+                    <h2>Amplified Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 5,499</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="giordani_gold.png" alt="Giordani Gold Essenza Parfum">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Essenza Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 5,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="glacier_fire.png" alt="Glacier Fire Eau de Toilette">
+                    <div class="company-label">GLACIER</div>
+                    <h2>Fire Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 2,599</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="love_potion.png" alt="Love Potion Eau de Parfum">
+                    <div class="company-label">LOVE POTION</div>
+                    <h2>Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 4,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="venture_power.png" alt="Venture Power Eau de Toilette">
+                    <div class="company-label">VENTURE</div>
+                    <h2>Power Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 2,599</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="osmanthus.png" alt="Women's Collection Osmanthus Infusion Eau de Toilette">
+                    <div class="company-label">WOMEN'S COLLECTION</div>
+                    <h2>Osmanthus Infusion Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="essenza_spray.png" alt="Giordani Gold Essenza Perfumed Body Spray">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Essenza Perfumed Body Spray</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 329</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="nordic_waters.png" alt="Nordic Waters For Her Eau de Parfum">
+                    <div class="company-label">NORDIC WATERS</div>
+                    <h2>For Her Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="wild_green.png" alt="Men's Collection Wild Green Eau de Toilette">
+                    <div class="company-label">MEN'S COLLECTION</div>
+                    <h2>Wild Green Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="eclat_toujours.png" alt="Eclat Toujours Intensité Eau de Toilette">
+                    <div class="company-label">ECLAT</div>
+                    <h2>Toujours Intensité Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 2,899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image1.png" alt="Whispers of Me Eau de Parfum">
+                    <div class="company-label">WHISPERS OF ME</div>
+                    <h2>Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 2,999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image2.png" alt="Nordic Waters Infinite Blue for Her">
+                    <div class="company-label">NORDIC WATERS</div>
+                    <h2>Infinite Blue for Her Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image3.png" alt="Amber Elixir Eau de Parfum">
+                    <div class="company-label">AMBER ELIXIR</div>
+                    <h2>Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,699</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image4.png" alt="Giordani Gold Essenza Perfumed Body Cream">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Essenza Perfumed Body Cream</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,099</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image5.png" alt="Eclat Homme Eau de Toilette">
+                    <div class="company-label">ECLAT</div>
+                    <h2>Homme Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,399</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image6.png" alt="Mister Giordani Anti-Perspirant Roll-On Deodorant">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Mister Giordani Anti-Perspirant Roll-On Deodorant</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 279</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image7.png" alt="Sensual Ruby Eau de Parfum">
+                    <div class="company-label">LOVE POTION</div>
+                    <h2>Sensual Ruby Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image8.png" alt="Glacier Anti-Perspirant Roll-On Deodorant">
+                    <div class="company-label">GLACIER</div>
+                    <h2>Anti-Perspirant Roll-On Deodorant</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 279</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image9.png" alt="Giordani Gold Man Eau de Parfum">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Man Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image10.png" alt="Possess Eau de Parfum">
+                    <div class="company-label">POSSESS</div>
+                    <h2>Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 4,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image11.png" alt="Eclat Nuit Eau de Parfum for Her">
+                    <div class="company-label">ECLAT</div>
+                    <h2>Nuit Eau de Parfum for Her</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image12.png" alt="Possess Perfumed Body Spray">
+                    <div class="company-label">POSSESS</div>
+                    <h2>Perfumed Body Spray</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 329</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image13.png" alt="Eclat Nuit Eau de Parfum for Him">
+                    <div class="company-label">ECLAT</div>
+                    <h2>Nuit Eau de Parfum for Him</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image14.png" alt="Divine Perfumed Roll-On Deodorant">
+                    <div class="company-label">DIVINE</div>
+                    <h2>Perfumed Roll-On Deodorant</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 279</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image15.png" alt="Eclat Femme Weekend Anti-Perspirant Roll-On Deodorant">
+                    <div class="company-label">ECLAT</div>
+                    <h2>Femme Weekend Anti-Perspirant Roll-On Deodorant</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 279</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image16.png" alt="Giordani Gold Floral Eau de Parfum">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Floral Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image1.png" alt="Glacier Eau de Toilette">
+                    <div class="company-label">GLACIER</div>
+                    <h2>Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 2,599</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image2.png" alt="Infinite Blue for Him Eau de Parfum">
+                    <div class="company-label">NORDIC-WATERS</div>
+                    <h2>Infinite Blue for Him Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,399</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image3.png" alt="DULCE DE LECHE Eau de Toilette">
+                    <div class="company-label">DULCE DE LECHE</div>
+                    <h2>Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image4.png" alt="Woman Eau de Parfum">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Woman Eau de Parfum</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 3,899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image5.png" alt="Sensitive Protect Deodorant Roll-On">
+                    <div class="company-label">NORTH FOR MEN</div>
+                    <h2>Sensitive Protect Deodorant Roll-On</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 279</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image6.png" alt="Rose Eau de Toilette">
+                    <div class="company-label">JOYCE</div>
+                    <h2>Rose Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,499</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image7.png" alt="Jade Eau de Toilette">
+                    <div class="company-label">JOYCE</div>
+                    <h2>Jade Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,699</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image8.png" alt="Unlimited Eau de Toilette">
+                    <div class="company-label">VENTURE</div>
+                    <h2>Unlimited Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 2,599</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image9.png" alt="Refreshing Fragrance Mist with Organic Coconut Water & Melon">
+                    <div class="company-label">LOVE NATURE</div>
+                    <h2>Refreshing Fragrance Mist with Organic Coconut Water & Melon</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image10.png" alt="Amour Eau de Toilette">
+                    <div class="company-label">ECLAT</div>
+                    <h2>Amour Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 2,499</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image11.png" alt="Citrus Tonic Eau de Toilette">
+                    <div class="company-label">MEN'S COLLECTION</div>
+                    <h2>Citrus Tonic Eau de Toilette</h2>
+                    <p>Description<span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 1,999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    <img src="cart.png" alt="Cart" class="cart-button" onclick="Cart()">
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ROMERINA. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

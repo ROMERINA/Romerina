@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROMERINA - Skincare</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F8F8F8;
+            color: #1E1E1E;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background-color: #FFFFFF;
+            color: #1E1E1E;
+            padding: 1rem 0;
+            border-bottom: 1px solid #DDDDDD;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .logo img {
+            height: 40px;
+            margin-right: 15px;
+        }
+        .slogan {
+            font-size: 0.9rem;
+            color: #A65A46;
+            margin-top: 2px;
+            display: block;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            margin-left: 30px;
+        }
+        nav ul li a {
+            color: #1E1E1E;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            min-width: 200px;
+            padding: 10px 0;
+            list-style: none;
+        }
+        .dropdown-menu a {
+            padding: 10px 20px;
+            display: block;
+            color: #1E1E1E;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        .dropdown-menu a:hover {
+            background: #F1F1F1;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        nav ul li a:hover {
+            color: #A65A46;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 100px;
+        }
+        .product-section {
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+            padding: 20px;
+        }
+        .product-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Ensures all cards have the same height */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+        .company-label {
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .product-card h2 {
+            margin-top: 5px;
+            font-size: 1.2rem;
+            color: #A65A46;
+        }
+        .product-card p {
+            font-size: 1rem;
+            color: #555;
+        }
+        .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
+        .add-to-cart {
+    background-color: #A65A46;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+    width: 100%;
+    margin-top: auto; /* Ensures it stays at the bottom */
+}
+
+.add-to-cart:hover {
+    background-color: #8C4537;
+}
+.more-options {
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            display: inline-block;
+            padding: 5px;
+            margin-left: 5px;
+        }
+        .more-options::before {
+            content: "🛈";
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        .tooltip-box {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            left: 50%;
+            top: 100%;
+            transform: translateX(-50%);
+            white-space: normal;
+            width: 220px;
+            z-index: 10;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .tooltip-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .tooltip-box::-webkit-scrollbar-thumb {
+            background: #aaa;
+            border-radius: 5px;
+        }
+        .image-slider {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    scroll-snap-type: x mandatory;
+}
+
+.image-slider img {
+    width: 100%;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    transition: transform 0.5s ease-in-out;
+}
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+}
+        .cart-button {
+    position: fixed;
+    bottom: 40px; /* Adjust to place above the footer */
+    right: 20px;
+    width: 50px;  /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+    cursor: pointer;
+    border-radius: 50%; /* Makes it circular if needed */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease-in-out;
+    background-color: white; /* Add background if needed */
+    padding: 5px;
+}
+
+.cart-button:hover {
+    transform: scale(1.1);
+}
+footer {
+            background-color: #1E1E1E;
+            color: white;
+            text-align: center;
+            padding: 35px 0;
+            font-size: 0.9rem;
+            margin-top: 50px;
+        }
+    </style>
+    <script>
+        document.querySelectorAll('.image-slider').forEach(slider => {
+    let images = slider.querySelectorAll('img');
+    let index = 0;
+
+    setInterval(() => {
+        index = (index + 1) % images.length;
+        slider.scrollTo({
+            left: index * slider.clientWidth,
+            behavior: "smooth"
+        });
+    }, 3000); // Change image every 3 seconds
+});
+
+function openLightbox(img) {
+    document.getElementById("lightbox").style.display = "flex";
+    document.getElementById("lightbox-img").src = img.src;
+}
+
+function closeLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+}
+
+        function oriflame(){
+            window.location.href="oriflame.html";
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const productCard = button.closest('.product-card');
+            const productName = productCard.querySelector('h2').innerText;
+            const productPrice = parseInt(productCard.querySelector('.price').innerText.replace(/[^\d]/g, ''), 10); // Ensure correct integer price
+            const productImage = productCard.querySelector('img').src;
+            const productCompany = productCard.querySelector('.company-label').innerText;
+
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const existingItem = cartItems.find(item => item.name === productName);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({
+                    company: productCompany,
+                    name: productName,
+                    price: productPrice,
+                    image: productImage,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            alert(`${productName} added to cart!`);
+        });
+    });
+});
+        function home(){
+            window.location.href="home.html";
+        }
+        function toggleTooltip(event, element) {
+            let tooltip = element.parentElement.nextElementSibling;
+            let isVisible = tooltip.style.display === "block";
+            document.querySelectorAll(".tooltip-box").forEach(box => box.style.display = "none");
+            if (!isVisible) {
+                tooltip.style.display = "block";
+            }
+        }
+
+        document.addEventListener("click", function(event) {
+            if (!event.target.classList.contains("more-options")) {
+                document.querySelectorAll(".tooltip-box").forEach(box => box.style.display = "none");
+            }
+        });
+        function Cart(){
+            window.location.href="cart.html";
+         }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" style="height: 90px; margin-right: 10px; vertical-align: middle;"> 
+                <div>
+                    ROMERINA
+                    <span class="slogan">FOR. HIM HER. & TOTS</span>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Shop</a>
+                    <div class="dropdown-menu">
+                    <a href="#" onclick="oriflame()">ORIFLAME</a>
+                    <a href="#" >PILGRIM</a>
+                    <a href="#">OTHER</a>
+                    </div>
+                    </li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section class="product-section">
+        <div class="container">
+            <div class="section-title">Hair Collection</div>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <h2>Instant Nourishing Hair Oil</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 999</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">LOVE NATURE</div> 
+                    <h2>Conditioner For Oily Hair with Organic Lemon & Mint</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 479</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <div class="image-slider">
+                        <img src="image1.jpg" alt="Product Image 1" onclick="openLightbox(this)">
+                        <img src="image2.jpg" alt="Product Image 2" onclick="openLightbox(this)">
+                        
+                    </div>
+                    <div class="company-label">MILK & HONEY GOLD</div> 
+                    <h2>Hair Mask for Radiant, Soft & Silky Hair</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 699</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="image4.png" alt="Subzero Hair & Body Wash"> 
+                    <div class="company-label">NORTH FOR MEN</div> 
+                    <h2>Subzero Hair & Body Wash</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 619</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="image5.png" alt="Bow Headband"> 
+                    <div class="company-label">ORIFLAME</div> 
+                    <h2>Bow Headband</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 449</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="image6.png" alt="Nourishing Hair Oil Coconut Oil"> 
+                    <div class="company-label">LOVE NATURE</div> 
+                    <h2>Nourishing Hair Oil Coconut Oil</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 279</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="image7.png" alt="Shampoo For Dandruff Control with Organic Tea Tree Oil & Aloe Vera"> 
+                    <div class="company-label">LOVE NATURE</div> 
+                    <h2>Shampoo For Dandruff Control with Organic Tea Tree Oil & Aloe Vera</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 549</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="image8.png" alt="Shampoo For Dry Hair with Organic Wheat & Coconut"> 
+                    <div class="company-label">LOVE NATURE</div> 
+                    <h2>Shampoo For Dry Hair with Organic Wheat & Coconut</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 549</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="image9.png" alt="Conditioner For Dry Hair with Organic Wheat & Coconut"> 
+                    <div class="company-label">LOVE NATURE</div> 
+                    <h2>Conditioner For Dry Hair with Organic Wheat & Coconut</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 549</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="image10.png" alt="Shampoo For Oily Hair with Organic Lemon & Mint"> 
+                    <div class="company-label">LOVE NATURE</div> 
+                    <h2>Shampoo For Oily Hair with Organic Lemon & Mint</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 479</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="image11.png" alt="Power Hold & Sleek Invisible Hair Gel"> 
+                    <div class="company-label">NORTH FOR MEN</div> 
+                    <h2>Power Hold & Sleek Invisible Hair Gel</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 529</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="image12.png" alt="Repairing Conditioner"> 
+                    <div class="company-label">BEAUTANICALS</div> 
+                    <h2>Repairing Conditioner</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 799</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="image13.png" alt="Scalp Massager"> 
+                    <div class="company-label">DUOLOGI</div> 
+                    <h2>Scalp Massager</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 499</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="image14.png" alt="Fall Resist Shampoo"> 
+                    <div class="company-label">DUOLOGI</div> 
+                    <h2>Fall Resist Shampoo</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 699</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="image15.png" alt="HairX TruColour"> 
+                    <div class="company-label">HAIRX</div> 
+                    <h2>HairX TruColour</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 599</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="image16.png" alt="Intense Repair Hair Mask"> 
+                    <div class="company-label">DUOLOGI</div> 
+                    <h2>Intense Repair Hair Mask</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 799</div> 
+                    <button class="add-to-cart">Add to Cart</button> 
+                </div>
+                
+                <div class="product-card">
+                    <img src="rich_creme_conditioner.png" alt="Rich Creme Conditioner">
+                    <div class="company-label">DUOLOGI</div>
+                    <h2>Rich Creme Conditioner</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 699</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="fall_resist_scalp_tonic.png" alt="Fall Resist Scalp Tonic">
+                    <div class="company-label">DUOLOGI</div>
+                    <h2>Fall Resist Scalp Tonic</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="intense_repair_shampoo.png" alt="Intense Repair Shampoo">
+                    <div class="company-label">DUOLOGI</div>
+                    <h2>Intense Repair Shampoo</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 699</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="hot_oil_dry_hair.png" alt="Hot Oil For Dry Hair">
+                    <div class="company-label">LOVE NATURE</div>
+                    <h2>Hot Oil For Dry Hair with Organic Wheat & Coconut</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 129</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="sealing_hair_serum.png" alt="Sealing Hair Serum">
+                    <div class="company-label">DUOLOGI</div>
+                    <h2>Sealing Hair Serum</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="anti_flake_scalp_scrub.png" alt="Anti-Flake Purifying Scalp Scrub">
+                    <div class="company-label">DUOLOGI</div>
+                    <h2>Anti-Flake Purifying Scalp Scrub</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 599</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="repairing_shampoo.png" alt="Repairing Shampoo">
+                    <div class="company-label">BEAUTANICALS</div>
+                    <h2>Repairing Shampoo</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 799</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="colour_protect_shampoo.png" alt="Colour Protect Shampoo">
+                    <div class="company-label">DUOLOGI</div>
+                    <h2>Colour Protect Shampoo</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 699</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="anti_flake_shampoo.png" alt="Anti-Flake Purifying Shampoo">
+                    <div class="company-label">DUOLOGI</div>
+                    <h2>Anti-Flake Purifying Shampoo</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 699</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="cc_hair_beautifier.png" alt="CC Hair Beautifier Leave-in Spray">
+                    <div class="company-label">DUOLOGI</div>
+                    <h2>CC Hair Beautifier Leave-in Spray</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="light_creme_conditioner.png" alt="Light Creme Conditioner">
+                    <div class="company-label">DUOLOGI</div>
+                    <h2>Light Creme Conditioner</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 699</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="radiant_soft_silky_shampoo.png" alt="Shampoo for Radiant, Soft & Silky Hair">
+                    <div class="company-label">MILK & HONEY GOLD</div>
+                    <h2>Shampoo for Radiant, Soft & Silky Hair</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 599</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="radiant_soft_silky_conditioner.png" alt="Conditioner for Radiant, Soft & Silky Hair">
+                    <div class="company-label">MILK & HONEY GOLD</div>
+                    <h2>Conditioner for Radiant, Soft & Silky Hair</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 529</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="head_band.png" alt="Head Band">
+                    <h2>Head Band</h2>
+                    <p>Description <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    Description<div class="tooltip-box"><h4>Description:</h4>
+                        <p>
+                            <ul>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </p>
+                    <h4>How To Use</h4>
+                <p></p>
+                    <h4>Expiry Details</h4>
+                <p></p>
+            </div>
+                    <div class="price">MRP Rs. 279</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+        <!-- Lightbox Container -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img">
+        <img src="cart.png" alt="Cart" class="cart-button" onclick="Cart()">
+    </section>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ROMERINA. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        document.querySelectorAll('.image-slider').forEach(slider => {
+    let images = slider.querySelectorAll('img');
+    let index = 0;
+
+    setInterval(() => {
+        index = (index + 1) % images.length;
+        slider.scrollTo({
+            left: index * slider.clientWidth,
+            behavior: "smooth"
+        });
+    }, 3000); // Change image every 3 seconds
+});
+
+function openLightbox(img) {
+    document.getElementById("lightbox").style.display = "flex";
+    document.getElementById("lightbox-img").src = img.src;
+}
+
+function closeLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+}
+
+        function oriflame(){
+            window.location.href="oriflame.html";
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const productCard = button.closest('.product-card');
+            const productName = productCard.querySelector('h2').innerText;
+            const productPrice = parseInt(productCard.querySelector('.price').innerText.replace(/[^\d]/g, ''), 10); // Ensure correct integer price
+            const productImage = productCard.querySelector('img').src;
+            const productCompany = productCard.querySelector('.company-label').innerText;
+
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const existingItem = cartItems.find(item => item.name === productName);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({
+                    company: productCompany,
+                    name: productName,
+                    price: productPrice,
+                    image: productImage,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            alert(`${productName} added to cart!`);
+        });
+    });
+});
+        function home(){
+            window.location.href="home.html";
+        }
+        function toggleTooltip(event, element) {
+            let tooltip = element.parentElement.nextElementSibling;
+            let isVisible = tooltip.style.display === "block";
+            document.querySelectorAll(".tooltip-box").forEach(box => box.style.display = "none");
+            if (!isVisible) {
+                tooltip.style.display = "block";
+            }
+        }
+
+        document.addEventListener("click", function(event) {
+            if (!event.target.classList.contains("more-options")) {
+                document.querySelectorAll(".tooltip-box").forEach(box => box.style.display = "none");
+            }
+        });
+        function Cart(){
+            window.location.href="cart.html";
+         }
+    </script>
+</body>
+</html>

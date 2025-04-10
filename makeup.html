@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROMERINA - Skincare</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F8F8F8;
+            color: #1E1E1E;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background-color: #FFFFFF;
+            color: #1E1E1E;
+            padding: 1rem 0;
+            border-bottom: 1px solid #DDDDDD;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .logo img {
+            height: 40px;
+            margin-right: 15px;
+        }
+        .slogan {
+            font-size: 0.9rem;
+            color: #A65A46;
+            margin-top: 2px;
+            display: block;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            margin-left: 30px;
+        }
+        nav ul li a {
+            color: #1E1E1E;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            min-width: 200px;
+            padding: 10px 0;
+            list-style: none;
+        }
+        .dropdown-menu a {
+            padding: 10px 20px;
+            display: block;
+            color: #1E1E1E;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        .dropdown-menu a:hover {
+            background: #F1F1F1;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        nav ul li a:hover {
+            color: #A65A46;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 100px;
+        }
+        .product-section {
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+            padding: 20px;
+        }
+        .product-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Ensures all cards have the same height */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+        .company-label {
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .product-card h2 {
+            margin-top: 5px;
+            font-size: 1.2rem;
+            color: #A65A46;
+        }
+        .product-card p {
+            font-size: 1rem;
+            color: #555;
+        }
+        .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
+        .add-to-cart {
+    background-color: #A65A46;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+    width: 100%;
+    margin-top: auto; /* Ensures it stays at the bottom */
+}
+
+.add-to-cart:hover {
+    background-color: #8C4537;
+}
+.more-options {
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            display: inline-block;
+            padding: 5px;
+            margin-left: 5px;
+        }
+        .more-options::before {
+            content: "🛈";
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        .tooltip-box {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            left: 50%;
+            top: 100%;
+            transform: translateX(-50%);
+            white-space: normal;
+            width: 220px;
+            z-index: 10;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .tooltip-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .tooltip-box::-webkit-scrollbar-thumb {
+            background: #aaa;
+            border-radius: 5px;
+        }
+        .cart-button {
+    position: fixed;
+    bottom: 40px; /* Adjust to place above the footer */
+    right: 20px;
+    width: 50px;  /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+    cursor: pointer;
+    border-radius: 50%; /* Makes it circular if needed */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease-in-out;
+    background-color: white; /* Add background if needed */
+    padding: 5px;
+}
+
+.cart-button:hover {
+    transform: scale(1.1);
+}
+footer {
+            background-color: #1E1E1E;
+            color: white;
+            text-align: center;
+            padding: 35px 0;
+            font-size: 0.9rem;
+            margin-top: 50px;
+        }
+    </style>
+    <script>
+        function oriflame(){
+            window.location.href="oriflame.html";
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const productCard = button.closest('.product-card');
+            const productName = productCard.querySelector('h2').innerText;
+            const productPrice = parseInt(productCard.querySelector('.price').innerText.replace(/[^\d]/g, ''), 10); // Ensure correct integer price
+            const productImage = productCard.querySelector('img').src;
+            const productCompany = productCard.querySelector('.company-label').innerText;
+
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const existingItem = cartItems.find(item => item.name === productName);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({
+                    company: productCompany,
+                    name: productName,
+                    price: productPrice,
+                    image: productImage,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            alert(`${productName} added to cart!`);
+        });
+    });
+});
+        function Cart(){
+            window.location.href="cart.html";
+         }
+        function home(){
+            window.location.href="home.html";
+        }
+        function toggleTooltip(event, element) {
+            let tooltip = element.parentElement.nextElementSibling;
+            let isVisible = tooltip.style.display === "block";
+            document.querySelectorAll(".tooltip-box").forEach(box => box.style.display = "none");
+            if (!isVisible) {
+                tooltip.style.display = "block";
+            }
+        }
+
+        document.addEventListener("click", function(event) {
+            if (!event.target.classList.contains("more-options")) {
+                document.querySelectorAll(".tooltip-box").forEach(box => box.style.display = "none");
+            }
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" style="height: 90px; margin-right: 10px; vertical-align: middle;"> 
+                <div>
+                    ROMERINA
+                    <span class="slogan">FOR. HIM HER. & TOTS</span>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Shop</a>
+                    <div class="dropdown-menu">
+                    <a href="#" onclick="oriflame()">ORIFLAME</a>
+                    <a href="#" >PILGRIM</a>
+                    <a href="#">OTHER</a>
+                    </div>
+                    </li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section class="product-section">
+        <div class="container">
+            <div class="section-title">Make-Up Collection</div>
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="image1.png" alt="Glow Essentials Face Cream">
+                    <div class="company-label">ESSENTIALS</div>
+                    <h2>Glow Essentials Face Cream with Vitamins E & B3 SPF 10</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 259</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image2.png" alt="OnColour Cream Lipstick">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Cream Lipstick</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 249</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image3.png" alt="Face Styler Bronzer">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Face Styler Bronzer</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,149</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image4.png" alt="Foundation Wedges 4-pack">
+                    <h2>Foundation Wedges 4-pack</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 119</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image5.png" alt="Hypnotic Colour Coloured Mascara">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Hypnotic Colour Coloured Mascara</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image6.png" alt="5-in-1 Wonder Lash Ultra Mascara Waterproof - Black">
+                    <div class="company-label">THE ONE</div>
+                    <h2>5-in-1 Wonder Lash Ultra Mascara Waterproof - Black</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 829</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image7.png" alt="Lighted Compact Mirror">
+                    <div class="company-label">ORIFLAME</div>
+                    <h2>Lighted Compact Mirror</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image8.png" alt="Colour Unlimited Eye Shadow">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Colour Unlimited Eye Shadow</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 939</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image9.png" alt="Iconic Lipstick SPF 15">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Iconic Lipstick SPF 15</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,199</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image10.png" alt="Iconic Lip Elixir SPF 15">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Iconic Lip Elixir SPF 15</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image11.png" alt="Dual Eyeshadow Brush">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Dual Eyeshadow Brush</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image12.png" alt="Tremendous Mascara Waterproof">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Tremendous Mascara Waterproof</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 849</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image13.png" alt="Contouring Kit">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Contouring Kit</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,599</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image14.png" alt="Green Apple Multi-purpose Balm">
+                    <div class="company-label">TENDER CARE</div>
+                    <h2>Green Apple Multi-purpose Balm</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 399</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image15.png" alt="False Lashes 360° Bendable Mascara Waterproof">
+                    <div class="company-label">THE ONE</div>
+                    <h2>False Lashes 360° Bendable Mascara Waterproof</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 849</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image16.png" alt="Reusable Bamboo Pads">
+                    <h2>Reusable Bamboo Pads</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 399</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image1.png" alt="Bow Headband">
+                    <div class="company-label">ORIFLAME</div>
+                    <h2>Bow Headband</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 449</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image2.png" alt="Blotting Roller">
+                    <h2>Blotting Roller</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,149</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image3.png" alt="Contouring Brush">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Contouring Brush</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 429</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image4.png" alt="Serum Infused Pearls">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Serum Infused Pearls</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image5.png" alt="Kohl Eye Pencil">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Kohl Eye Pencil</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 499</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image6.png" alt="Iconic Satin Lipstick SPF 15">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Iconic Satin Lipstick SPF 15</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image7.png" alt="Wet Creative Eyeliner Water Activated">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Wet Creative Eyeliner Water Activated</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image8.png" alt="OnColour Nail Polish">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Nail Polish</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 249</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image9.png" alt="Nail It Manicure Kit">
+                    <h2>Nail It Manicure Kit</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 499</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image10.png" alt="OnColour Power Up Foundation">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Power Up Foundation</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 499</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image11.png" alt="All-Over Make-up Remover">
+                    <div class="company-label">THE ONE</div>
+                    <h2>All-Over Make-up Remover</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 449</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image12.png" alt="OnColour Liquid Eye Liner">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Liquid Eye Liner</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 329</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image13.png" alt="Everlasting Sync Foundation SPF 30">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Everlasting Sync Foundation SPF 30</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image14.png" alt="Irresistible Touch High Shine Lipstick">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Irresistible Touch High Shine Lipstick</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 879</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image15.png" alt="Natural Multi-purpose Balm">
+                    <div class="company-label">TENDER CARE</div>
+                    <h2>Natural Multi-purpose Balm</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 439</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image16.png" alt="Glow Essentials Face Cream">
+                    <div class="company-label">ESSENTIALS</div>
+                    <h2>Glow Essentials Face Cream with Vitamins E & B3 SPF 10</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 259</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image1.png" alt="Eternal Glow Foundation SPF 25">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Eternal Glow Foundation SPF 25</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image2.png" alt="OnColour Matte Lipstick">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Matte Lipstick</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 249</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image3.png" alt="OnColour Cream Lipstick">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Cream Lipstick</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 249</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image4.png" alt="Make-Up Pro On Screen Finish Primer">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Make-Up Pro On Screen Finish Primer</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 599</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image5.png" alt="Colour Unlimited Ultra Fix Liquid Lipstick">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Colour Unlimited Ultra Fix Liquid Lipstick</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,099</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image6.png" alt="Soothing Micellar Cleansing Water">
+                    <div class="company-label">OPTIMALS</div>
+                    <h2>Soothing Micellar Cleansing Water</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 749</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image7.png" alt="OnColour Face Powder">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Face Powder</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 249</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image8.png" alt="OnColour Retractable Kajal Eyeliner">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Retractable Kajal Eyeliner</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 329</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image9.png" alt="Cocoa Butter Multi-purpose Balm">
+                    <div class="company-label">TENDER CARE</div>
+                    <h2>Cocoa Butter Multi-purpose Balm</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 439</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image10.png" alt="Tattoo Effect Brow Pen">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Tattoo Effect Brow Pen</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 799</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image11.png" alt="Iconic Lip Elixir SPF 15">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Iconic Lip Elixir SPF 15</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,439</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image12.png" alt="The One Smart Sync-Timeless Trio">
+                    <div class="company-label">THE ONE</div>
+                    <h2>The One Smart Sync-Timeless Trio</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,797</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image13.png" alt="Foundation Wedges 4-pack">
+                    <h2>Foundation Wedges 4-pack</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 119</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image14.png" alt="Hypnotic Depth Mascara Shade Add">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Hypnotic Depth Mascara Shade Add</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image15.png" alt="Tweezer">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Tweezer</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 229</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image16.png" alt="Glow Essentials Face Cream">
+                    <div class="company-label">ESSENTIALS</div>
+                    <h2>Glow Essentials Face Cream with Vitamins E & B3 SPF 10</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 259</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image1.png" alt="Collection - Natural, Passion Fruit and Watermelon">
+                    <div class="company-label">TENDER CARE</div>
+                    <h2>Collection - Natural, Passion Fruit and Watermelon</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,317</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image2.png" alt="Colour Unlimited Matte Lipstick">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Colour Unlimited Matte Lipstick</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 879</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image3.png" alt="Skin Care Headband">
+                    <h2>Skin Care Headband</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image4.png" alt="Hypnotic Colour Coloured Mascara - Purple Pop">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Hypnotic Colour Coloured Mascara - Purple Pop</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image5.png" alt="Illuskin Glow Reflective Foundation">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Illuskin Glow Reflective Foundation</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,099</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image6.png" alt="Make-up Pro Loose Powder">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Make-up Pro Loose Powder</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,249</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image7.png" alt="Browcara">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Browcara</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 879</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image8.png" alt="5-in-1 Wonder Lash Mascara Waterproof">
+                    <div class="company-label">THE ONE</div>
+                    <h2>5-in-1 Wonder Lash Mascara Waterproof</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 829</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image9.png" alt="OnColour Perfect Duo Eye Pencil">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Perfect Duo Eye Pencil</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 549</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image10.png" alt="Colour Stylist Super Pout Lipstick">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Colour Stylist Super Pout Lipstick</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 879</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image11.png" alt="OnColour Big Lash Mascara Waterproof">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Big Lash Mascara Waterproof</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 589</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image12.png" alt="Eyeliner Stylo Waterproof">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Eyeliner Stylo Waterproof</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 769</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image13.png" alt="Blush Brush">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Blush Brush</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 429</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image14.png" alt="Iconic Matte Lipstick SPF 15">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Iconic Matte Lipstick SPF 15</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1,299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image15.png" alt="Lip Spa Lip Balm">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Lip Spa Lip Balm</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 659</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image16.png" alt="OnColour Nail Polish">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Nail Polish</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 249</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image1.png" alt="5-in-1 Wonder Lash Ultra Mascara Waterproof - Black">
+                    <div class="company-label">THE ONE</div>
+                    <h2>5-in-1 Wonder Lash Ultra Mascara Waterproof - Black</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 829</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image2.png" alt="Blending Brush">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Blending Brush</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 259</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image3.png" alt="Eyelash Curler">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Eyelash Curler</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 279</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image4.png" alt="Everlasting Sync Concealer">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Everlasting Sync Concealer</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 619</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image5.png" alt="Long Wear Mineral Foundation SPF 20">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Long Wear Mineral Foundation SPF 20</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1599</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image6.png" alt="Make-Up Pro Face Mist">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Make-Up Pro Face Mist</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 769</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image7.png" alt="Longwear Liquid Eyeshadow Metallic">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Longwear Liquid Eyeshadow Metallic</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 899</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image8.png" alt="OnColour All Eyes Palette">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour All Eyes Palette</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image9.png" alt="Serum Boost Primer">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Serum Boost Primer</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image10.png" alt="OnColour Nail Polish">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Nail Polish</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 249</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image11.png" alt="CC Cream SPF 30 + UVA Protection">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>CC Cream SPF 30 + UVA Protection</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1399</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image12.png" alt="OnColour Cream Lipstick">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Cream Lipstick</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 249</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image13.png" alt="Sensuous Touch Foundation Brush">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Sensuous Touch Foundation Brush</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 539</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image14.png" alt="High Impact Eye Pencil">
+                    <div class="company-label">THE ONE</div>
+                    <h2>High Impact Eye Pencil</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 619</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image15.png" alt="Age Defying Serum Boost Foundation SPF 12 + UVA Protection">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Age Defying Serum Boost Foundation SPF 12 + UVA Protection</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1399</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image16.png" alt="Blackcurrant Multi-purpose Balm">
+                    <div class="company-label">TENDER CARE</div>
+                    <h2>Blackcurrant Multi-purpose Balm</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 399</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image1.png" alt="Foundation Brush">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Foundation Brush</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 429</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image2.png" alt="Raspberry Multi-purpose Balm">
+                    <div class="company-label">TENDER CARE</div>
+                    <h2>Raspberry Multi-purpose Balm</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 399</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image3.png" alt="OnColour Matte Lipstick">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Matte Lipstick</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 249</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image4.png" alt="OnColour Peach Glow Perfector">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Peach Glow Perfector</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 499</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image5.png" alt="Colour Stylist Ultimate Lip Liner">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Colour Stylist Ultimate Lip Liner</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 679</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image6.png" alt="Concealer Brush">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Concealer Brush</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 279</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image7.png" alt="Reusable Cotton Pads">
+                    <h2>Reusable Cotton Pads</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 499</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image8.png" alt="Smart Sync Lipstick">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Smart Sync Lipstick</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 599</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image9.png" alt="Colour Unlimited Ultra Fix Lipstick">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Colour Unlimited Ultra Fix Lipstick</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1099</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image10.png" alt="Eternal Glow Lipstick SPF 25">
+                    <div class="company-label">GIORDANI GOLD</div>
+                    <h2>Eternal Glow Lipstick SPF 25</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1599</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image11.png" alt="Dual Eyebrow Brush">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Dual Eyebrow Brush</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 249</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image12.png" alt="Lip Brush">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Lip Brush</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 339</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image13.png" alt="Pouch">
+                    <h2>Pouch</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 999</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image14.png" alt="Illuskin Two Way Cake Foundation">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Illuskin Two Way Cake Foundation</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 1099</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image15.png" alt="OnColour Oh! Sweet Glossy">
+                    <div class="company-label">ONCOLOUR</div>
+                    <h2>OnColour Oh! Sweet Glossy</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 299</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image16.png" alt="Head Band">
+                    <h2>Head Band</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 279</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image1.png" alt="Sunset Large Make-Up Sponge">
+                    <h2>Sunset Large Make-Up Sponge</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 599</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image2.png" alt="Sunset Nail Kit">
+                    <h2>Sunset Nail Kit</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 699</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image3.png" alt="Wonder Liner">
+                    <div class="company-label">THE ONE</div>
+                    <h2>Wonder Liner</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 699</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <img src="image4.png" alt="Nail It Nail File And Buffer">
+                    <h2>Nail It Nail File And Buffer</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
+                    <div class="price">MRP Rs. 199</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <img src="cart.png" alt="Cart" class="cart-button" onclick="Cart()">
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ROMERINA. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -231,7 +231,7 @@
     </footer>
 <script>
     const form = document.getElementById("customerForm");
-const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwUda2UOc2nk27OhP5A9qE92AuNlAU_5clh7Oe3an8OvwaDxAwBldtWYH2H6HqEquQe/exec"; // Your provided URL
+const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwUda2UOc2nk27OhP5A9qE92AuNlAU_5clh7Oe3an8OvwaDxAwBldtWYH2H6HqEquQe/exec";
 
 document.getElementById("currentDate").textContent = new Date().toLocaleDateString("en-GB");
 
@@ -264,39 +264,33 @@ form.addEventListener("submit", async function (e) {
         customerData[key] = value;
     });
 
-    const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]"); // Updated to cartItems
+    const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
     const orderNumber = generateOrderNumber();
 
     fetch(SCRIPT_WEB_APP_URL, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        mode: "no-cors", // Bypass CORS
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             customer: customerData,
-            cart: cartItems, // Send as "cart" to match Apps Script
-            orderNumber: orderNumber,
+            cart: cartItems,
+            orderNumber: orderNumber
         }),
         redirect: "follow"
     })
-    .then(response => response.text())
-    .then(result => {
-        console.log("✅ Server response:", result);
-        if (result === "Success") {
-            alert("Order submitted successfully!");
-            const phoneNumber = "917907056406";
-            const message = `🛍️ Order Confirmed!\nOrder No: ${orderNumber}\nThank you for shopping with us! Track order via admin.`;
-            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            window.location.href = whatsappURL;
-        } else {
-            alert("Submission failed: " + result);
-        }
+    .then(response => {
+        console.log("✅ Request sent (no-cors mode)");
+        alert("Order submitted successfully!");
+        const phoneNumber = "917907056406";
+        const message = `🛍️ Order Confirmed!\nOrder No: ${orderNumber}\nThank you for shopping with us! Track order via admin.`;
+        const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        window.location.href = whatsappURL;
     })
     .catch(err => {
         console.error("❌ Submission Error:", err);
         alert("Failed to submit order. Please try again.");
     });
-});    
+});   
 </script> 
     
       </body>

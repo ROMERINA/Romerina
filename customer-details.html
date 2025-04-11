@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Details Form</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-       body {
+        body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -99,7 +98,6 @@
         nav ul li a:hover {
             color: #A65A46;
         }
-
         footer {
             background-color: #1E1E1E;
             color: white;
@@ -108,8 +106,6 @@
             font-size: 0.9rem;
             margin-top: 50px;
         }
-
-
         .form-container {
             max-width: 600px;
             margin: 60px auto;
@@ -119,19 +115,16 @@
             border-radius: 15px;
             position: relative;
         }
-
         h2 {
             text-align: center;
             margin-bottom: 25px;
             color: #A65A46;
         }
-
         label {
             display: block;
             margin: 15px 0 5px;
             font-weight: 600;
         }
-
         input[type="text"],
         input[type="tel"],
         input[type="email"],
@@ -143,7 +136,6 @@
             font-size: 16px;
             transition: border-color 0.3s ease-in-out;
         }
-
         input[type="text"]:focus,
         input[type="tel"]:focus,
         input[type="email"]:focus,
@@ -151,7 +143,6 @@
             border-color: #A65A46;
             outline: none;
         }
-
         .submit-btn {
             background-color: #A65A46;
             color: white;
@@ -163,11 +154,9 @@
             cursor: pointer;
             width: 100%;
         }
-
         .submit-btn:hover {
             background-color: #8C4537;
         }
-
         .date {
             position: absolute;
             top: 20px;
@@ -177,7 +166,6 @@
         }
     </style>
 </head>
-
 <body>
     <header>
         <div class="container">
@@ -193,11 +181,11 @@
                     <li><a href="#">Home</a></li>
                     <li class="dropdown">
                         <a href="#">Shop</a>
-                    <div class="dropdown-menu">
-                    <a href="#" onclick="oriflame()">ORIFLAME</a>
-                    <a href="#" >PILGRIM</a>
-                    <a href="#">OTHER</a>
-                    </div>
+                        <div class="dropdown-menu">
+                            <a href="#" onclick="oriflame()">ORIFLAME</a>
+                            <a href="#">PILGRIM</a>
+                            <a href="#">OTHER</a>
+                        </div>
                     </li>
                     <li><a href="#">About</a></li>
                     <li><a href="#">Contact</a></li>
@@ -205,94 +193,109 @@
             </nav>
         </div>
     </header>
-<br><br><br><br>
+    <br><br><br><br>
     <div class="form-container">
         <div class="date" id="currentDate"></div>
         <h2>Customer Information</h2>
         <form id="customerForm">
             <label for="name">Full Name</label>
             <input type="text" id="name" name="name" placeholder="Enter your name" required>
-
             <label for="email">Email</label>
             <input type="email" id="email" name="email" placeholder="Enter your email">
-
             <label for="phone">Phone Number</label>
             <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
-
+            <label for="country">Country</label>
+            <input type="text" id="country" name="country" placeholder="Enter your country" required>
+            <label for="state">State</label>
+            <input type="text" id="state" name="state" placeholder="Enter your state" required>
             <label for="address">Address</label>
-            <textarea id="address" name="address" placeholder="Enter your address" rows="4" required></textarea>
-
+            <textarea id="address" name="address" placeholder="Enter your street address" rows="4" required></textarea>
             <button type="submit" class="submit-btn">Submit</button>
         </form>
     </div>
-
     <footer>
-        &copy; 2025 Your Store. All rights reserved.
+        © 2025 Your Store. All rights reserved.
     </footer>
-<script>
-    const form = document.getElementById("customerForm");
-const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwUda2UOc2nk27OhP5A9qE92AuNlAU_5clh7Oe3an8OvwaDxAwBldtWYH2H6HqEquQe/exec";
+    <script>
+        const form = document.getElementById("customerForm");
+        const SCRIPT_WEB_APP_URL = "YOUR_WEB_APP_URL"; // Replace with your web app URL
 
-document.getElementById("currentDate").textContent = new Date().toLocaleDateString("en-GB");
+        document.getElementById("currentDate").textContent = new Date().toLocaleDateString("en-GB");
 
-function generateOrderNumber() {
-    const now = new Date();
-    const date = now.getDate().toString().padStart(2, '0');
-    const month = (now.getMonth() + 1).toString().padStart(2, '0');
-    const year = now.getFullYear().toString();
-    let counter = localStorage.getItem("dailyCounter");
-    let savedDate = localStorage.getItem("lastOrderDate");
-    const todayStr = `${date}${month}${year}`;
+        function generateOrderNumber() {
+            const now = new Date();
+            const date = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear().toString();
+            let counter = localStorage.getItem("dailyCounter");
+            let savedDate = localStorage.getItem("lastOrderDate");
+            const todayStr = `${date}${month}${year}`;
 
-    if (savedDate !== todayStr) {
-        counter = 1;
-    } else {
-        counter = parseInt(counter || '0') + 1;
-    }
+            if (savedDate !== todayStr) {
+                counter = 1;
+            } else {
+                counter = parseInt(counter || '0') + 1;
+            }
 
-    localStorage.setItem("dailyCounter", counter);
-    localStorage.setItem("lastOrderDate", todayStr);
-    return `${todayStr}${counter.toString().padStart(7, '0')}`;
-}
+            localStorage.setItem("dailyCounter", counter);
+            localStorage.setItem("lastOrderDate", todayStr);
+            return `${todayStr}${counter.toString().padStart(7, '0')}`;
+        }
 
-form.addEventListener("submit", async function (e) {
-    e.preventDefault();
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-    const formData = new FormData(form);
-    const customerData = {};
-    formData.forEach((value, key) => {
-        customerData[key] = value;
-    });
+            const formData = new FormData(form);
+            const customerData = {};
+            formData.forEach((value, key) => {
+                customerData[key] = value;
+            });
 
-    const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-    const orderNumber = generateOrderNumber();
+            const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+            const orderNumber = generateOrderNumber();
 
-    fetch(SCRIPT_WEB_APP_URL, {
-        method: "POST",
-        mode: "no-cors", // Bypass CORS
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            customer: customerData,
-            cart: cartItems,
-            orderNumber: orderNumber
-        }),
-        redirect: "follow"
-    })
-    .then(response => {
-        console.log("✅ Request sent (no-cors mode)");
-        alert("Order submitted successfully!");
-        const phoneNumber = "917907056406";
-        const message = `🛍️ Order Confirmed!\nOrder No: ${orderNumber}\nThank you for shopping with us! Track order via admin.`;
-        const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-        window.location.href = whatsappURL;
-    })
-    .catch(err => {
-        console.error("❌ Submission Error:", err);
-        alert("Failed to submit order. Please try again.");
-    });
-});   
-</script> 
-    
-      </body>
+            // Log data for debugging
+            console.log("Sending data:", {
+                customer: customerData,
+                cart: cartItems,
+                orderNumber: orderNumber
+            });
 
+            if (cartItems.length === 0) {
+                alert("Your cart is empty. Please add items before submitting.");
+                return;
+            }
+
+            fetch(SCRIPT_WEB_APP_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    customer: customerData,
+                    cart: cartItems,
+                    orderNumber: orderNumber
+                })
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log("Response:", result);
+                alert("Order submitted successfully!");
+                // Clear cart after successful submission
+                localStorage.removeItem("cartItems");
+                // Redirect to WhatsApp
+                const phoneNumber = "917907056406";
+                const message = `🛍️ Order Confirmed!\nOrder No: ${orderNumber}\nThank you for shopping with us! Track order via admin.`;
+                const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                window.location.href = whatsappURL;
+            })
+            .catch(err => {
+                console.error("Submission Error:", err);
+                alert("Failed to submit order. Please try again.");
+            });
+        });
+
+        function oriflame() {
+            window.location.href = "oriflame.html";
+        }
+    </script>
+</body>
 </html>

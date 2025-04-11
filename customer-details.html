@@ -267,30 +267,29 @@
             }
 
             fetch(SCRIPT_WEB_APP_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    customer: customerData,
-                    cart: cartItems,
-                    orderNumber: orderNumber
-                })
-            })
-            .then(response => response.text())
-            .then(result => {
-                console.log("Response:", result);
-                alert("Order submitted successfully!");
-                // Clear cart after successful submission
-                localStorage.removeItem("cartItems");
-                // Redirect to WhatsApp
-                const phoneNumber = "917907056406";
-                const message = `🛍️ Order Confirmed!\nOrder No: ${orderNumber}\nThank you for shopping with us! Track order via admin.`;
-                const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-                window.location.href = whatsappURL;
-            })
-            .catch(err => {
-                console.error("Submission Error:", err);
-                alert("Failed to submit order. Please try again.");
-            });
+    method: "POST",
+    mode: "no-cors", // Add this back
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        customer: customerData,
+        cart: cartItems,
+        orderNumber: orderNumber
+    })
+})
+.then(() => {
+    // No response.text() with no-cors, assume success
+    console.log("Request sent (no-cors mode)");
+    alert("Order submitted successfully!");
+    localStorage.removeItem("cartItems");
+    const phoneNumber = "917907056406";
+    const message = `🛍️ Order Confirmed!\nOrder No: ${orderNumber}\nThank you for shopping with us! Track order via admin.`;
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.location.href = whatsappURL;
+})
+.catch(err => {
+    console.error("Submission Error:", err);
+    alert("Failed to submit order. Please try again.");
+});
         });
 
         function oriflame() {

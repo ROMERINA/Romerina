@@ -217,8 +217,8 @@
         © 2025 Your Store. All rights reserved.
     </footer>
     <script>
-        const form = document.getElementById("customerForm");
-        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwUda2UOc2nk27OhP5A9qE92AuNlAU_5clh7Oe3an8OvwaDxAwBldtWYH2H6HqEquQe/exec"; // Replace with your web app URL
+       const form = document.getElementById("customerForm");
+        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwUda2UOc2nk27OhP5A9qE92AuNlAU_5clh7Oe3an8OvwaDxAwBldtWYH2H6HqEquQe/exec"; // Replace with your URL
 
         document.getElementById("currentDate").textContent = new Date().toLocaleDateString("en-GB");
 
@@ -254,7 +254,6 @@
             const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
             const orderNumber = generateOrderNumber();
 
-            // Log data for debugging
             console.log("Sending data:", {
                 customer: customerData,
                 cart: cartItems,
@@ -267,34 +266,36 @@
             }
 
             fetch(SCRIPT_WEB_APP_URL, {
-    method: "POST",
-    mode: "no-cors", // Add this back
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-        customer: customerData,
-        cart: cartItems,
-        orderNumber: orderNumber
-    })
-})
-.then(() => {
-    // No response.text() with no-cors, assume success
-    console.log("Request sent (no-cors mode)");
-    alert("Order submitted successfully!");
-    localStorage.removeItem("cartItems");
-    const phoneNumber = "917907056406";
-    const message = `🛍️ Order Confirmed!\nOrder No: ${orderNumber}\nThank you for shopping with us! Track order via admin.`;
-    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.location.href = whatsappURL;
-})
-.catch(err => {
-    console.error("Submission Error:", err);
-    alert("Failed to submit order. Please try again.");
-});
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    customer: customerData,
+                    cart: cartItems,
+                    orderNumber: orderNumber
+                })
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log("Response:", result);
+                if (result === "Success") {
+                    alert("Order submitted successfully!");
+                    localStorage.removeItem("cartItems");
+                    const phoneNumber = "917907056406";
+                    const message = `🛍️ Order Confirmed!\nOrder No: ${orderNumber}\nThank you for shopping with us! Track order via admin.`;
+                    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                    window.location.href = whatsappURL;
+                } else {
+                    throw new Error("Unexpected response: " + result);
+                }
+            })
+            .catch(err => {
+                console.error("Submission Error:", err);
+                alert("Failed to submit order. Please try again.");
+            });
         });
 
         function oriflame() {
             window.location.href = "oriflame.html";
-        }
-    </script>
+        }    </script>
 </body>
 </html>

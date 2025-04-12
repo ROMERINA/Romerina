@@ -109,7 +109,7 @@
             return `${todayStr}${counter.toString().padStart(7, '0')}`;
         }
 
-        // Function to set test cart data
+        // Ensure cart is always set with test data
         function setTestCart() {
             const testCart = [
                 { name: "Test Product 1", mrp: 10, quantity: 2 },
@@ -119,12 +119,8 @@
             console.log("Test cart set:", JSON.stringify(testCart));
         }
 
-        // Set test cart on page load
-        window.onload = function() {
-            if (!localStorage.getItem("cartItems") || JSON.parse(localStorage.getItem("cartItems")).length === 0) {
-                setTestCart();
-            }
-        };
+        // Set test cart on page load and before submission
+        window.onload = setTestCart;
 
         form.addEventListener("submit", async function (e) {
             e.preventDefault();
@@ -138,10 +134,11 @@
             });
             console.log("Collected customer data:", customerData);
 
-            const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+            let cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
             if (cartItems.length === 0) {
-                console.warn("Cart is empty, using test data");
-                setTestCart(); // Ensure cart is populated
+                console.warn("Cart is empty, setting test data");
+                setTestCart();
+                cartItems = JSON.parse(localStorage.getItem("cartItems"));
             }
             const orderNumber = generateOrderNumber();
 
@@ -153,7 +150,7 @@
 
             fetch(SCRIPT_WEB_APP_URL, {
                 method: "POST",
-                mode: "no-cors", // Bypass CORS
+                mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     customer: customerData,

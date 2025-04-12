@@ -110,19 +110,33 @@
             return `${todayStr}${counter.toString().padStart(7, '0')}`;
         }
 
+        // Function to set test cart data (for debugging)
+        function setTestCart() {
+            localStorage.setItem("cartItems", JSON.stringify([
+                { name: "Test Product 1", mrp: 10, quantity: 2 },
+                { name: "Test Product 2", mrp: 15, quantity: 1 }
+            ]));
+            console.log("Test cart set:", localStorage.getItem("cartItems"));
+        }
+
         form.addEventListener("submit", async function (e) {
             e.preventDefault();
 
             const formData = new FormData(form);
             const customerData = {};
             formData.forEach((value, key) => {
-                if (value.trim() !== "") { // Only include non-empty values
+                if (value.trim() !== "") {
                     customerData[key] = value.trim();
                 }
             });
-            console.log("Collected customer data:", customerData); // Debug log
+            console.log("Collected customer data:", customerData);
 
             const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+            if (cartItems.length === 0) {
+                console.warn("Cart is empty, setting test data for debugging");
+                setTestCart(); // Set test data if cart is empty
+                return; // Prevent submission until cart is filled
+            }
             const orderNumber = generateOrderNumber();
 
             console.log("Sending data:", {
@@ -130,11 +144,6 @@
                 cart: cartItems,
                 orderNumber: orderNumber
             });
-
-            if (cartItems.length === 0) {
-                alert("Your cart is empty. Please add items before submitting.");
-                return;
-            }
 
             fetch(SCRIPT_WEB_APP_URL, {
                 method: "POST",
@@ -164,6 +173,8 @@
         function oriflame() {
             window.location.href = "oriflame.html";
         }
+
+        // Run this in console to test: setTestCart();
     </script>
 </body>
 </html>

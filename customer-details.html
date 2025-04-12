@@ -68,13 +68,9 @@
             <label for="name">Full Name</label>
             <input type="text" id="name" name="name" placeholder="Enter your name" required>
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Enter your email">
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
             <label for="phone">Phone Number</label>
             <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
-            <label for="country">Country</label>
-            <input type="text" id="country" name="country" placeholder="Enter your country" required>
-            <label for="state">State</label>
-            <input type="text" id="state" name="state" placeholder="Enter your state" required>
             <label for="address">Address</label>
             <textarea id="address" name="address" placeholder="Enter your street address" rows="4" required></textarea>
             <button type="submit" class="submit-btn">Submit</button>
@@ -85,7 +81,7 @@
     </footer>
     <script>
         const form = document.getElementById("customerForm");
-        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwUda2UOc2nk27OhP5A9qE92AuNlAU_5clh7Oe3an8OvwaDxAwBldtWYH2H6HqEquQe/exec"; // Ensure this matches your latest deployment URL
+        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwUda2UOc2nk27OhP5A9qE92AuNlAU_5clh7Oe3an8OvwaDxAwBldtWYH2H6HqEquQe/exec"; // Update with your latest URL
 
         document.getElementById("currentDate").textContent = new Date().toLocaleDateString("en-GB");
 
@@ -109,29 +105,28 @@
             return `${todayStr}${counter.toString().padStart(7, '0')}`;
         }
 
-        // Ensure cart is always set with test data
+        // Set test cart based on your data
         function setTestCart() {
             const testCart = [
-                { name: "Test Product 1", mrp: 10, quantity: 2 },
-                { name: "Test Product 2", mrp: 15, quantity: 1 }
+                { productId: "", company: "", mrp: 10, quantity: 2 },
+                { productId: "", company: "", mrp: 15, quantity: 1 }
             ];
             localStorage.setItem("cartItems", JSON.stringify(testCart));
             console.log("Test cart set:", JSON.stringify(testCart));
         }
 
-        // Set test cart on page load and before submission
         window.onload = setTestCart;
 
         form.addEventListener("submit", async function (e) {
             e.preventDefault();
 
             const formData = new FormData(form);
-            const customerData = {};
-            formData.forEach((value, key) => {
-                if (value.trim() !== "") {
-                    customerData[key] = value.trim();
-                }
-            });
+            const customerData = {
+                name: formData.get("name"),
+                email: formData.get("email"),
+                phone: formData.get("phone"),
+                address: formData.get("address")
+            };
             console.log("Collected customer data:", customerData);
 
             let cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
@@ -143,9 +138,9 @@
             const orderNumber = generateOrderNumber();
 
             console.log("Sending data:", {
+                orderNumber: orderNumber,
                 customer: customerData,
-                cart: cartItems,
-                orderNumber: orderNumber
+                cart: cartItems
             });
 
             fetch(SCRIPT_WEB_APP_URL, {
@@ -153,9 +148,9 @@
                 mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    orderNumber: orderNumber,
                     customer: customerData,
-                    cart: cartItems,
-                    orderNumber: orderNumber
+                    cart: cartItems
                 })
             })
             .then(() => {

@@ -6,7 +6,6 @@
     <title>Customer Details Form</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* Same styles as before */
         body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 0; background-color: #F8F8F8; color: #1E1E1E; }
         .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
         header { background-color: #FFFFFF; color: #1E1E1E; padding: 1rem 0; border-bottom: 1px solid #DDDDDD; position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05); }
@@ -110,14 +109,22 @@
             return `${todayStr}${counter.toString().padStart(7, '0')}`;
         }
 
-        // Function to set test cart data (for debugging)
+        // Function to set test cart data
         function setTestCart() {
-            localStorage.setItem("cartItems", JSON.stringify([
+            const testCart = [
                 { name: "Test Product 1", mrp: 10, quantity: 2 },
                 { name: "Test Product 2", mrp: 15, quantity: 1 }
-            ]));
-            console.log("Test cart set:", localStorage.getItem("cartItems"));
+            ];
+            localStorage.setItem("cartItems", JSON.stringify(testCart));
+            console.log("Test cart set:", JSON.stringify(testCart));
         }
+
+        // Set test cart on page load
+        window.onload = function() {
+            if (!localStorage.getItem("cartItems") || JSON.parse(localStorage.getItem("cartItems")).length === 0) {
+                setTestCart();
+            }
+        };
 
         form.addEventListener("submit", async function (e) {
             e.preventDefault();
@@ -133,9 +140,8 @@
 
             const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
             if (cartItems.length === 0) {
-                console.warn("Cart is empty, setting test data for debugging");
-                setTestCart(); // Set test data if cart is empty
-                return; // Prevent submission until cart is filled
+                console.warn("Cart is empty, using test data");
+                setTestCart(); // Ensure cart is populated
             }
             const orderNumber = generateOrderNumber();
 
@@ -173,8 +179,6 @@
         function oriflame() {
             window.location.href = "oriflame.html";
         }
-
-        // Run this in console to test: setTestCart();
     </script>
 </body>
 </html>

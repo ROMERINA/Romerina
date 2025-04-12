@@ -81,7 +81,7 @@
     </footer>
     <script>
         const form = document.getElementById("customerForm");
-        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwUda2UOc2nk27OhP5A9qE92AuNlAU_5clh7Oe3an8OvwaDxAwBldtWYH2H6HqEquQe/exec"; // Update with your latest URL
+        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxExU0YBtBuQuBGn5jcxIXaUUZV4wC0AWc4ypG5Bmi7p7A1jgT-9xJoYMslMY_sxDW-/exec"; // Update with your latest URL
 
         document.getElementById("currentDate").textContent = new Date().toLocaleDateString("en-GB");
 
@@ -105,11 +105,10 @@
             return `${todayStr}${counter.toString().padStart(7, '0')}`;
         }
 
-        // Set test cart based on your data
         function setTestCart() {
             const testCart = [
-                { productId: "", company: "", mrp: 10, quantity: 2 },
-                { productId: "", company: "", mrp: 15, quantity: 1 }
+                { productName: "Product A", productId: "", company: "", mrp: 10, quantity: 2 },
+                { productName: "Product B", productId: "", company: "", mrp: 15, quantity: 1 }
             ];
             localStorage.setItem("cartItems", JSON.stringify(testCart));
             console.log("Test cart set:", JSON.stringify(testCart));

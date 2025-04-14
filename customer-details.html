@@ -85,7 +85,7 @@
     </footer>
     <script>
         const form = document.getElementById("customerForm");
-        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzku757oNeSeEtVC-Q31tuHReMSmhoOR8lRkZUh003dD4radTWEwwoQ-bnSJqOXMYdJpw/exec"; // Update with your latest URL
+        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyO5F8vDmuiZavPBgL_kxlD9PZv4aTnD869TMGRSyt_B5U9m4yWncPVv9Mf3ZEi6XInkA/exec"; // Update with your latest URL
 
         document.getElementById("currentDate").textContent = new Date().toLocaleDateString("en-GB");
 
@@ -109,17 +109,6 @@
             return `${todayStr}${counter.toString().padStart(7, '0')}`;
         }
 
-        function setTestCart() {
-            const testCart = [
-                { company: "Company X", productName: "Product A", quantity: 2, mrp: 10 },
-                { company: "Company Y", productName: "Product B", quantity: 1, mrp: 15 }
-            ];
-            localStorage.setItem("cartItems", JSON.stringify(testCart));
-            console.log("Test cart set:", JSON.stringify(testCart));
-        }
-
-        window.onload = setTestCart;
-
         form.addEventListener("submit", async function (e) {
             e.preventDefault();
 
@@ -136,9 +125,9 @@
 
             let cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
             if (cartItems.length === 0) {
-                console.warn("Cart is empty, setting test data");
-                setTestCart();
-                cartItems = JSON.parse(localStorage.getItem("cartItems"));
+                console.warn("Cart is empty, no data from cart page");
+                alert("No cart items found. Please add products from the shop page first.");
+                return; // Stop submission if cart is empty
             }
             const orderNumber = generateOrderNumber();
 

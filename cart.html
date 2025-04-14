@@ -100,19 +100,23 @@
 
     // Function to add a product (to be called from another page or manually)
     window.addProductToCart = function(company, name, price, image = 'https://via.placeholder.com/100') {
-        if (typeof price !== 'number' || price < 0) {
-            console.warn("Invalid price provided:", price, "Defaulting to 0");
-            price = 0;
+        console.log("addProductToCart called with:", { company, name, price, image }); // Debug input
+        if (typeof price !== 'number' || isNaN(price) || price < 0) {
+            console.warn("Invalid price detected:", price, "Defaulting to 0 and stopping");
+            return; // Stop execution if price is invalid
         }
         let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        console.log("Current cartItems before update:", cartItems); // Debug current state
         const existingItemIndex = cartItems.findIndex(item => item.name === name && item.company === company);
         if (existingItemIndex > -1) {
             cartItems[existingItemIndex].quantity++;
+            console.log("Incremented quantity for existing item at index:", existingItemIndex);
         } else {
             cartItems.push({ company, name, mrp: price, quantity: 1, image });
+            console.log("Added new item:", { company, name, mrp: price, quantity: 1, image });
         }
         localStorage.setItem('cartItems', JSON.stringify(cartItems));
-        console.log("Updated cart items in localStorage:", cartItems); // Debug log
+        console.log("Updated cartItems in localStorage:", cartItems); // Debug after update
         loadCart();
     };
 
@@ -120,7 +124,7 @@
         let cartItems = [];
         try {
             cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-            console.log("Loaded cart items from localStorage:", cartItems); // Debug log
+            console.log("Loaded cart items from localStorage:", cartItems); // Debug loaded data
         } catch (e) {
             console.error("Error parsing cartItems:", e);
             cartItems = [];
@@ -138,8 +142,9 @@
         }
 
         cartItems.forEach((item, index) => {
+            console.log("Processing item:", item); // Debug each item
             totalItems += item.quantity;
-            totalPrice += (item.mrp || 0) * item.quantity; // Ensure mrp is used
+            totalPrice += (item.mrp || 0) * item.quantity;
 
             const cartItem = document.createElement('div');
             cartItem.classList.add('cart-item');
@@ -205,7 +210,7 @@
             company: item.company || "",
             productName: item.name || "Unnamed Product",
             quantity: item.quantity,
-            mrp: item.mrp || 0 // Ensure mrp is preserved or defaults to 0
+            mrp: item.mrp || 0
         }));
         localStorage.setItem("cartItems", JSON.stringify(transformedCart));
         console.log("Transformed cart for checkout:", transformedCart);
@@ -214,7 +219,6 @@
 
     loadCart();
 });
-
 function oriflame() {
     window.location.href = "oriflame.html";
 }

@@ -100,6 +100,10 @@
 
     // Function to add a product (to be called from another page or manually)
     window.addProductToCart = function(company, name, price, image = 'https://via.placeholder.com/100') {
+        if (typeof price !== 'number' || price < 0) {
+            console.warn("Invalid price provided:", price, "Defaulting to 0");
+            price = 0;
+        }
         let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
         const existingItemIndex = cartItems.findIndex(item => item.name === name && item.company === company);
         if (existingItemIndex > -1) {
@@ -108,6 +112,7 @@
             cartItems.push({ company, name, mrp: price, quantity: 1, image });
         }
         localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        console.log("Updated cart items in localStorage:", cartItems); // Debug log
         loadCart();
     };
 
@@ -115,7 +120,7 @@
         let cartItems = [];
         try {
             cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-            console.log("Loaded cart items:", cartItems);
+            console.log("Loaded cart items from localStorage:", cartItems); // Debug log
         } catch (e) {
             console.error("Error parsing cartItems:", e);
             cartItems = [];
@@ -134,7 +139,7 @@
 
         cartItems.forEach((item, index) => {
             totalItems += item.quantity;
-            totalPrice += (item.mrp || 0) * item.quantity;
+            totalPrice += (item.mrp || 0) * item.quantity; // Ensure mrp is used
 
             const cartItem = document.createElement('div');
             cartItem.classList.add('cart-item');
@@ -200,7 +205,7 @@
             company: item.company || "",
             productName: item.name || "Unnamed Product",
             quantity: item.quantity,
-            mrp: item.mrp || 0
+            mrp: item.mrp || 0 // Ensure mrp is preserved or defaults to 0
         }));
         localStorage.setItem("cartItems", JSON.stringify(transformedCart));
         console.log("Transformed cart for checkout:", transformedCart);

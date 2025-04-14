@@ -5,240 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ROMERINA - Product Collection</title>
     <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #F8F8F8;
-            color: #1E1E1E;
-        }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        header {
-            background-color: #FFFFFF;
-            color: #1E1E1E;
-            padding: 1rem 0;
-            border-bottom: 1px solid #DDDDDD;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
-        }
-        header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 2rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-        .logo img {
-            height: 40px;
-            margin-right: 15px;
-        }
-        .slogan {
-            font-size: 0.9rem;
-            color: #A65A46;
-            margin-top: 2px;
-            display: block;
-        }
-        nav ul {
-            list-style: none;
-            display: flex;
-            margin: 0;
-            padding: 0;
-        }
-        nav ul li {
-            margin-left: 30px;
-        }
-        nav ul li a {
-            color: #1E1E1E;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: color 0.3s;
-        }
-        .dropdown {
-            position: relative;
-        }
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            min-width: 200px;
-            padding: 10px 0;
-            list-style: none;
-        }
-        .dropdown-menu a {
-            padding: 10px 20px;
-            display: block;
-            color: #1E1E1E;
-            font-size: 1rem;
-            transition: background 0.3s;
-        }
-        .dropdown h2{
-            text-align: center;
-        }
-        .dropdown-menu a:hover {
-            background: #F1F1F1;
-        }
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
-        nav ul li a:hover {
-            color: #A65A46;
-        }
-        .tcontainer {
-            max-width: 1100px;
-            margin: auto;
-            background: white;
-            padding: 150px 20px 80px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            font-weight: 600;
-        }
-        .cart-wrapper {
-            display: flex;
-            gap: 30px;
-        }
-        .cart-items {
-            flex: 2;
-        }
-        .cart-summary {
-            flex: 1;
-            background: #FAFAFA;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-        }
-        .cart-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #ddd;
-            padding: 20px 0;
-            transition: transform 0.3s ease-in-out;
-            position: relative;
-        }
-        .cart-item:hover {
-            transform: scale(1.02);
-        }
-        .cart-item img {
-            width: 100px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .cart-item-details {
-            flex-grow: 1;
-            margin-left: 20px;
-        }
-        .cart-item h2 {
-            font-size: 1.4rem;
-            margin: 0;
-            color: #1D1D1F;
-        }
-        .company-label {
-            font-size: 0.9rem;
-            color: #777;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        .price {
-            font-weight: 600;
-            color: #A65A46;
-            font-size: 1.3rem;
-            margin-top: 5px;
-        }
-        .quantity-selector {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-        .quantity-selector button {
-            background-color: #A65A46;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            cursor: pointer;
-            font-size: 1rem;
-            border-radius: 8px;
-            margin: 0 8px;
-            transition: background 0.3s;
-        }
-        .quantity-selector button:hover {
-            background-color: #8C4537;
-        }
-        .quantity-selector input {
-            width: 50px;
-            text-align: center;
-            font-size: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 6px;
-        }
-        .remove-item {
-            background: none;
-            border: none;
-            color: red;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-        .remove-item:hover {
-            color: darkred;
-        }
-        .cart-summary p {
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: #1D1D1F;
-        }
-        .checkout-btn {
-            display: block;
-            width: 100%;
-            text-align: center;
-            background: linear-gradient(135deg, #A65A46, #8C4537);
-            color: white;
-            padding: 18px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.4rem;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease-in-out;
-            font-weight: 600;
-        }
-        .checkout-btn:hover {
-            background: linear-gradient(135deg, #8C4537, #A65A46);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-        footer {
-            background-color: #1E1E1E;
-            color: white;
-            text-align: center;
-            padding: 35px 0;
-            font-size: 0.9rem;
-            margin-top: 50px;
-        }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 0; background-color: #F8F8F8; color: #1E1E1E; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+        header { background-color: #FFFFFF; color: #1E1E1E; padding: 1rem 0; border-bottom: 1px solid #DDDDDD; position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05); }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; font-size: 2rem; font-weight: bold; letter-spacing: 1px; }
+        .logo img { height: 40px; margin-right: 15px; }
+        .slogan { font-size: 0.9rem; color: #A65A46; margin-top: 2px; display: block; }
+        nav ul { list-style: none; display: flex; margin: 0; padding: 0; }
+        nav ul li { margin-left: 30px; }
+        nav ul li a { color: #1E1E1E; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: color 0.3s; }
+        .dropdown { position: relative; }
+        .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; min-width: 200px; padding: 10px 0; list-style: none; }
+        .dropdown-menu a { padding: 10px 20px; display: block; color: #1E1E1E; font-size: 1rem; transition: background 0.3s; }
+        .dropdown h2{ text-align: center; }
+        .dropdown-menu a:hover { background: #F1F1F1; }
+        .dropdown:hover .dropdown-menu { display: block; }
+        nav ul li a:hover { color: #A65A46; }
+        .tcontainer { max-width: 1100px; margin: auto; background: white; padding: 150px 20px 80px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; color: #333; font-size: 2.5rem; margin-bottom: 30px; font-weight: 600; }
+        .cart-wrapper { display: flex; gap: 30px; }
+        .cart-items { flex: 2; }
+        .cart-summary { flex: 1; background: #FAFAFA; padding: 20px; border-radius: 10px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); }
+        .cart-item { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ddd; padding: 20px 0; transition: transform 0.3s ease-in-out; position: relative; }
+        .cart-item:hover { transform: scale(1.02); }
+        .cart-item img { width: 100px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+        .cart-item-details { flex-grow: 1; margin-left: 20px; }
+        .cart-item h2 { font-size: 1.4rem; margin: 0; color: #1D1D1F; }
+        .company-label { font-size: 0.9rem; color: #777; margin-top: 10px; font-weight: bold; }
+        .price { font-weight: 600; color: #A65A46; font-size: 1.3rem; margin-top: 5px; }
+        .quantity-selector { display: flex; align-items: center; margin-top: 10px; }
+        .quantity-selector button { background-color: #A65A46; color: white; border: none; padding: 10px 16px; cursor: pointer; font-size: 1rem; border-radius: 8px; margin: 0 8px; transition: background 0.3s; }
+        .quantity-selector button:hover { background-color: #8C4537; }
+        .quantity-selector input { width: 50px; text-align: center; font-size: 1rem; border: 1px solid #ddd; border-radius: 8px; padding: 6px; }
+        .remove-item { background: none; border: none; color: red; cursor: pointer; font-size: 1rem; font-weight: 600; transition: color 0.3s; }
+        .remove-item:hover { color: darkred; }
+        .cart-summary p { font-size: 1.2rem; font-weight: 500; color: #1D1D1F; }
+        .checkout-btn { display: block; width: 100%; text-align: center; background: linear-gradient(135deg, #A65A46, #8C4537); color: white; padding: 18px; border: none; border-radius: 12px; font-size: 1.4rem; cursor: pointer; margin-top: 20px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); transition: all 0.3s ease-in-out; font-weight: 600; }
+        .checkout-btn:hover { background: linear-gradient(135deg, #8C4537, #A65A46); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); }
+        footer { background-color: #1E1E1E; color: white; text-align: center; padding: 35px 0; font-size: 0.9rem; margin-top: 50px; }
     </style>
 </head>
 <body>
@@ -256,11 +61,11 @@
                     <li onclick="home()"><a href="#">Home</a></li>
                     <li class="dropdown">
                         <a href="#">Shop</a>
-                    <div class="dropdown-menu">
-                    <a href="#" onclick="oriflame()">ORIFLAME</a>
-                    <a href="#" >PILGRIM</a>
-                    <a href="#">OTHER</a>
-                    </div>
+                        <div class="dropdown-menu">
+                            <a href="#" onclick="oriflame()">ORIFLAME</a>
+                            <a href="#">PILGRIM</a>
+                            <a href="#">OTHER</a>
+                        </div>
                     </li>
                     <li><a href="#">About</a></li>
                     <li><a href="#">Contact</a></li>
@@ -273,7 +78,6 @@
         <br><br>
         <div class="cart-wrapper">
             <div class="cart-items">
-                
             </div>
             <div class="cart-summary">
                 <p>Total Items: <span id="total-items">0</span></p>
@@ -282,131 +86,121 @@
             </div>
         </div>
     </div>
-
-        
     <footer>
         <div class="container">
-            <p>&copy; 2025 ROMERINA. All rights reserved.</p>
+            <p>© 2025 ROMERINA. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-    const cartItemsContainer = document.querySelector('.cart-items');
-    const totalPriceContainer = document.getElementById('total-price');
-    const totalItemsContainer = document.getElementById('total-items');
+            const cartItemsContainer = document.querySelector('.cart-items');
+            const totalPriceContainer = document.getElementById('total-price');
+            const totalItemsContainer = document.getElementById('total-items');
 
-    function loadCart() {
-        let cartItems = [];
-        try {
-            cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        } catch (e) {
-            console.error("Error parsing cartItems:", e);
-            cartItems = [];
-        }
-        cartItemsContainer.innerHTML = '';
+            function loadCart() {
+                let cartItems = [];
+                try {
+                    cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+                } catch (e) {
+                    console.error("Error parsing cartItems:", e);
+                    cartItems = [];
+                }
+                cartItemsContainer.innerHTML = '';
 
-        let totalItems = 0;
-        let totalPrice = 0;
+                let totalItems = 0;
+                let totalPrice = 0;
 
-        if (cartItems.length === 0) {
-            cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
-            totalItemsContainer.textContent = '0';
-            totalPriceContainer.textContent = '0.00';
-            return;
-        }
+                if (cartItems.length === 0) {
+                    cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+                    totalItemsContainer.textContent = '0';
+                    totalPriceContainer.textContent = '0.00';
+                    return;
+                }
 
-        cartItems.forEach((item, index) => {
-            totalItems += item.quantity;
-            totalPrice += (item.mrp || item.price || 0) * item.quantity;
+                cartItems.forEach((item, index) => {
+                    totalItems += item.quantity;
+                    totalPrice += (item.mrp || item.price || 0) * item.quantity;
 
-            const cartItem = document.createElement('div');
-            cartItem.classList.add('cart-item');
-            cartItem.innerHTML = `
-                <div class="cart-item-details">
-                    <img src="${item.image || 'https://via.placeholder.com/100'}" alt="${item.name}" width="100">
-                    <h3 class="company-label">${item.company}</h3>
-                    <h2>${item.name}</h2>
-                    <p class="price">Rs. ${(item.mrp || item.price || 0).toFixed(2)}</p>
-                    <div class="quantity-selector">
-                        <button class="decrease" data-index="${index}">-</button>
-                        <input type="text" value="${item.quantity}" readonly>
-                        <button class="increase" data-index="${index}">+</button>
-                    </div>
-                </div>
-                <button class="remove-item" data-index="${index}">Remove</button>
-            `;
-            cartItemsContainer.appendChild(cartItem);
+                    const cartItem = document.createElement('div');
+                    cartItem.classList.add('cart-item');
+                    cartItem.innerHTML = `
+                        <div class="cart-item-details">
+                            <img src="${item.image || 'https://via.placeholder.com/100'}" alt="${item.name}" width="100">
+                            <h3 class="company-label">${item.company}</h3>
+                            <h2>${item.name}</h2>
+                            <p class="price">Rs. ${(item.mrp || item.price || 0).toFixed(2)}</p>
+                            <div class="quantity-selector">
+                                <button class="decrease" data-index="${index}">-</button>
+                                <input type="text" value="${item.quantity}" readonly>
+                                <button class="increase" data-index="${index}">+</button>
+                            </div>
+                        </div>
+                        <button class="remove-item" data-index="${index}">Remove</button>
+                    `;
+                    cartItemsContainer.appendChild(cartItem);
+                });
+
+                totalItemsContainer.textContent = totalItems;
+                totalPriceContainer.textContent = totalPrice.toFixed(2);
+            }
+
+            cartItemsContainer.addEventListener('click', (event) => {
+                let cartItems = [];
+                try {
+                    cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+                } catch (e) {
+                    console.error("Error parsing cartItems:", e);
+                    return;
+                }
+                const index = event.target.dataset.index;
+
+                if (index === undefined || !cartItems[index]) return;
+
+                if (event.target.classList.contains('increase')) {
+                    cartItems[index].quantity++;
+                } else if (event.target.classList.contains('decrease')) {
+                    if (cartItems[index].quantity > 1) {
+                        cartItems[index].quantity--;
+                    } else {
+                        cartItems.splice(index, 1);
+                    }
+                } else if (event.target.classList.contains('remove-item')) {
+                    cartItems.splice(index, 1);
+                }
+
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                loadCart();
+            });
+
+            document.getElementById("checkout-button").addEventListener("click", () => {
+                let cartItems = [];
+                try {
+                    cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+                } catch (e) {
+                    console.error("Error parsing cartItems:", e);
+                    return;
+                }
+                const transformedCart = cartItems.map(item => ({
+                    company: item.company || "",
+                    productName: item.name || "Unnamed Product",
+                    quantity: item.quantity,
+                    mrp: item.mrp || item.price || 0
+                }));
+                localStorage.setItem("cartItems", JSON.stringify(transformedCart));
+                window.location.href = "https://romerina.github.io/Romerina/customer-details.html";
+            });
+
+            loadCart();
         });
 
-        totalItemsContainer.textContent = totalItems;
-        totalPriceContainer.textContent = totalPrice.toFixed(2);
-    }
-
-    cartItemsContainer.addEventListener('click', (event) => {
-        let cartItems = [];
-        try {
-            cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        } catch (e) {
-            console.error("Error parsing cartItems:", e);
-            return;
-        }
-        const index = event.target.dataset.index;
-
-        if (index === undefined || !cartItems[index]) return;
-
-        if (event.target.classList.contains('increase')) {
-            cartItems[index].quantity++;
-        } else if (event.target.classList.contains('decrease')) {
-            if (cartItems[index].quantity > 1) {
-                cartItems[index].quantity--;
-            } else {
-                cartItems.splice(index, 1);
-            }
-        } else if (event.target.classList.contains('remove-item')) {
-            cartItems.splice(index, 1);
+        function oriflame() {
+            window.location.href = "oriflame.html";
         }
 
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
-        loadCart();
-    });
-
-    document.getElementById("checkout-button").addEventListener("click", () => {
-        let cartItems = [];
-        try {
-            cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-        } catch (e) {
-            console.error("Error parsing cartItems:", e);
-            return;
+        function home() {
+            window.location.href = "home.html";
         }
-        const transformedCart = cartItems.map(item => ({
-            name: item.name,
-            company: item.company,
-            mrp: item.mrp || item.price || 0,
-            productId: item.productId || "",
-            quantity: item.quantity
-        }));
-        localStorage.setItem("cartItems", JSON.stringify(transformedCart));
-        window.location.href = "https://romerina.github.io/Romerina/customer-details.html";
-    });
-
-    loadCart();
-});
-        function oriflame(){
-            window.location.href="oriflame.html";
-        }
-
-        function sa(){
-            var a=document.getElementById('skincare').value;
-            if (a==="All") {
-
-                window.location.href="skincare.html";
-                
-            }
-        }
-        function home(){
-            window.location.href="home.html";
-        }
-            </script>
+    </script>
 </body>
 </html>

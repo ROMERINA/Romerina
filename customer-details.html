@@ -73,6 +73,10 @@
             <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
             <label for="address">Address</label>
             <textarea id="address" name="address" placeholder="Enter your street address" rows="4" required></textarea>
+            <label for="city">City/State</label>
+            <input type="text" id="city" name="city" placeholder="Enter your city/state" required>
+            <label for="country">Country</label>
+            <input type="text" id="country" name="country" placeholder="Enter your country" required>
             <button type="submit" class="submit-btn">Submit</button>
         </form>
     </div>
@@ -81,7 +85,7 @@
     </footer>
     <script>
         const form = document.getElementById("customerForm");
-        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw2XtlGBrBgTNlTBrvToP7MX2A5wQ0uRJZ5KST3y4tUjmC3MjlVzKLti-WB8Y5SsRim/exec"; // Update with your latest URL
+        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzku757oNeSeEtVC-Q31tuHReMSmhoOR8lRkZUh003dD4radTWEwwoQ-bnSJqOXMYdJpw/exec"; // Update with your latest URL
 
         document.getElementById("currentDate").textContent = new Date().toLocaleDateString("en-GB");
 
@@ -107,8 +111,8 @@
 
         function setTestCart() {
             const testCart = [
-                { productName: "Product A", productId: "", company: "", mrp: 10, quantity: 2 },
-                { productName: "Product B", productId: "", company: "", mrp: 15, quantity: 1 }
+                { company: "Company X", productName: "Product A", quantity: 2, mrp: 10 },
+                { company: "Company Y", productName: "Product B", quantity: 1, mrp: 15 }
             ];
             localStorage.setItem("cartItems", JSON.stringify(testCart));
             console.log("Test cart set:", JSON.stringify(testCart));
@@ -124,7 +128,9 @@
                 name: formData.get("name"),
                 email: formData.get("email"),
                 phone: formData.get("phone"),
-                address: formData.get("address")
+                address: formData.get("address"),
+                city: formData.get("city"),
+                country: formData.get("country")
             };
             console.log("Collected customer data:", customerData);
 

@@ -94,113 +94,129 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const cartItemsContainer = document.querySelector('.cart-items');
-            const totalPriceContainer = document.getElementById('total-price');
-            const totalItemsContainer = document.getElementById('total-items');
+    const cartItemsContainer = document.querySelector('.cart-items');
+    const totalPriceContainer = document.getElementById('total-price');
+    const totalItemsContainer = document.getElementById('total-items');
 
-            function loadCart() {
-                let cartItems = [];
-                try {
-                    cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-                } catch (e) {
-                    console.error("Error parsing cartItems:", e);
-                    cartItems = [];
-                }
-                cartItemsContainer.innerHTML = '';
+    // Function to add a product (to be called from another page or manually)
+    window.addProductToCart = function(company, name, price, image = 'https://via.placeholder.com/100') {
+        let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        const existingItemIndex = cartItems.findIndex(item => item.name === name && item.company === company);
+        if (existingItemIndex > -1) {
+            cartItems[existingItemIndex].quantity++;
+        } else {
+            cartItems.push({ company, name, mrp: price, quantity: 1, image });
+        }
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        loadCart();
+    };
 
-                let totalItems = 0;
-                let totalPrice = 0;
+    function loadCart() {
+        let cartItems = [];
+        try {
+            cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+            console.log("Loaded cart items:", cartItems);
+        } catch (e) {
+            console.error("Error parsing cartItems:", e);
+            cartItems = [];
+        }
+        cartItemsContainer.innerHTML = '';
 
-                if (cartItems.length === 0) {
-                    cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
-                    totalItemsContainer.textContent = '0';
-                    totalPriceContainer.textContent = '0.00';
-                    return;
-                }
+        let totalItems = 0;
+        let totalPrice = 0;
 
-                cartItems.forEach((item, index) => {
-                    totalItems += item.quantity;
-                    totalPrice += (item.mrp || item.price || 0) * item.quantity;
+        if (cartItems.length === 0) {
+            cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+            totalItemsContainer.textContent = '0';
+            totalPriceContainer.textContent = '0.00';
+            return;
+        }
 
-                    const cartItem = document.createElement('div');
-                    cartItem.classList.add('cart-item');
-                    cartItem.innerHTML = `
-                        <div class="cart-item-details">
-                            <img src="${item.image || 'https://via.placeholder.com/100'}" alt="${item.name}" width="100">
-                            <h3 class="company-label">${item.company}</h3>
-                            <h2>${item.name}</h2>
-                            <p class="price">Rs. ${(item.mrp || item.price || 0).toFixed(2)}</p>
-                            <div class="quantity-selector">
-                                <button class="decrease" data-index="${index}">-</button>
-                                <input type="text" value="${item.quantity}" readonly>
-                                <button class="increase" data-index="${index}">+</button>
-                            </div>
-                        </div>
-                        <button class="remove-item" data-index="${index}">Remove</button>
-                    `;
-                    cartItemsContainer.appendChild(cartItem);
-                });
+        cartItems.forEach((item, index) => {
+            totalItems += item.quantity;
+            totalPrice += (item.mrp || 0) * item.quantity;
 
-                totalItemsContainer.textContent = totalItems;
-                totalPriceContainer.textContent = totalPrice.toFixed(2);
-            }
-
-            cartItemsContainer.addEventListener('click', (event) => {
-                let cartItems = [];
-                try {
-                    cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-                } catch (e) {
-                    console.error("Error parsing cartItems:", e);
-                    return;
-                }
-                const index = event.target.dataset.index;
-
-                if (index === undefined || !cartItems[index]) return;
-
-                if (event.target.classList.contains('increase')) {
-                    cartItems[index].quantity++;
-                } else if (event.target.classList.contains('decrease')) {
-                    if (cartItems[index].quantity > 1) {
-                        cartItems[index].quantity--;
-                    } else {
-                        cartItems.splice(index, 1);
-                    }
-                } else if (event.target.classList.contains('remove-item')) {
-                    cartItems.splice(index, 1);
-                }
-
-                localStorage.setItem('cartItems', JSON.stringify(cartItems));
-                loadCart();
-            });
-
-            document.getElementById("checkout-button").addEventListener("click", () => {
-                let cartItems = [];
-                try {
-                    cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-                } catch (e) {
-                    console.error("Error parsing cartItems:", e);
-                    return;
-                }
-                const transformedCart = cartItems.map(item => ({
-                    company: item.company || "",
-                    productName: item.name || "Unnamed Product",
-                    quantity: item.quantity,
-                    mrp: item.mrp || item.price || 0
-                }));
-                localStorage.setItem("cartItems", JSON.stringify(transformedCart));
-                window.location.href = "https://romerina.github.io/Romerina/customer-details.html";
-            });
-
-            loadCart();
+            const cartItem = document.createElement('div');
+            cartItem.classList.add('cart-item');
+            cartItem.innerHTML = `
+                <div class="cart-item-details">
+                    <img src="${item.image || 'https://via.placeholder.com/100'}" alt="${item.name}" width="100">
+                    <h3 class="company-label">${item.company}</h3>
+                    <h2>${item.name}</h2>
+                    <p class="price">Rs. ${(item.mrp || 0).toFixed(2)}</p>
+                    <div class="quantity-selector">
+                        <button class="decrease" data-index="${index}">-</button>
+                        <input type="text" value="${item.quantity}" readonly>
+                        <button class="increase" data-index="${index}">+</button>
+                    </div>
+                </div>
+                <button class="remove-item" data-index="${index}">Remove</button>
+            `;
+            cartItemsContainer.appendChild(cartItem);
         });
 
-        function oriflame() {
-            window.location.href = "oriflame.html";
+        totalItemsContainer.textContent = totalItems;
+        totalPriceContainer.textContent = totalPrice.toFixed(2);
+    }
+
+    cartItemsContainer.addEventListener('click', (event) => {
+        let cartItems = [];
+        try {
+            cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        } catch (e) {
+            console.error("Error parsing cartItems:", e);
+            return;
+        }
+        const index = event.target.dataset.index;
+
+        if (index === undefined || !cartItems[index]) return;
+
+        if (event.target.classList.contains('increase')) {
+            cartItems[index].quantity++;
+        } else if (event.target.classList.contains('decrease')) {
+            if (cartItems[index].quantity > 1) {
+                cartItems[index].quantity--;
+            } else {
+                cartItems.splice(index, 1);
+            }
+        } else if (event.target.classList.contains('remove-item')) {
+            cartItems.splice(index, 1);
         }
 
-        function home() {
-            window.location.href = "home.html";
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        loadCart();
+    });
+
+    document.getElementById("checkout-button").addEventListener("click", () => {
+        let cartItems = [];
+        try {
+            cartItems = JSON.parse(localStorage.getItem("cartItems") || '[]');
+            console.log("Cart items before checkout:", cartItems);
+        } catch (e) {
+            console.error("Error parsing cartItems:", e);
+            return;
         }
+        const transformedCart = cartItems.map(item => ({
+            company: item.company || "",
+            productName: item.name || "Unnamed Product",
+            quantity: item.quantity,
+            mrp: item.mrp || 0
+        }));
+        localStorage.setItem("cartItems", JSON.stringify(transformedCart));
+        console.log("Transformed cart for checkout:", transformedCart);
+        window.location.href = "https://romerina.github.io/Romerina/customer-details.html";
+    });
+
+    loadCart();
+});
+
+function oriflame() {
+    window.location.href = "oriflame.html";
+}
+
+function home() {
+    window.location.href = "home.html";
+}
     </script>
 </body>
 </html>

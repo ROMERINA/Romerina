@@ -85,7 +85,7 @@
     </footer>
     <script>
         const form = document.getElementById("customerForm");
-        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzLNfwIpxUHy3hgG1bE4gpQxrR-EjPrQ61sNxj-Q-ZkODwqCPIzKLpFFJmh0EDJ5mg8/exec"; // Update with your latest URL
+        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzYlcgvZ9PwzUYWEOBwTooUpwFmQxYxpShEiVi6SF2JQTceR5GG4se_E6Zrk67Tgblg/exec"; // Update if redeployed
 
         document.getElementById("currentDate").textContent = new Date().toLocaleDateString("en-GB");
 
@@ -127,7 +127,7 @@
             if (cartItems.length === 0) {
                 console.warn("Cart is empty, no data from cart page");
                 alert("No cart items found. Please add products from the shop page first.");
-                return; // Stop submission if cart is empty
+                return;
             }
             const orderNumber = generateOrderNumber();
 
@@ -147,7 +147,7 @@
                     cart: cartItems
                 })
             })
-            .then(() => {
+            .then(response => {
                 console.log("Request sent (no-cors mode)");
                 alert("Order submitted successfully!");
                 localStorage.removeItem("cartItems");
@@ -158,7 +158,7 @@
             })
             .catch(err => {
                 console.error("Submission Error:", err);
-                alert("Failed to submit order. Please try again.");
+                alert("Failed to submit order. Please try again. Check console for details.");
             });
         });
 

@@ -84,130 +84,86 @@
         © 2025 Your Store. All rights reserved.
     </footer>
     <script>
- document.addEventListener('DOMContentLoaded', () => {
-    const cartItemsContainer = document.querySelector('.cart-items');
-    const totalPriceContainer = document.getElementById('total-price');
-    const totalItemsContainer = document.getElementById('total-items');
+ const form = document.getElementById("customerForm");
+const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwR81epuOvTf8QIslwRv0mrBwe9cxXNmYTzl_9v134fH93VwfNkP-3b_zSQWMg8K2rrag/exec"; // Update if redeployed
 
-    // Function to add a product (to be called from another page or manually)
-    window.addProductToCart = function(company, name, price, image = 'https://via.placeholder.com/100') {
-        let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-        const existingItemIndex = cartItems.findIndex(item => item.name === name && item.company === company);
-        if (existingItemIndex > -1) {
-            cartItems[existingItemIndex].quantity++;
-        } else {
-            cartItems.push({ company, name, mrp: price, quantity: 1, image });
-        }
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
-        loadCart();
-    };
+document.getElementById("currentDate").textContent = new Date().toLocaleDateString("en-GB");
 
-    function loadCart() {
-        let cartItems = [];
-        try {
-            cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-            console.log("Loaded cart items:", cartItems);
-        } catch (e) {
-            console.error("Error parsing cartItems:", e);
-            cartItems = [];
-        }
-        cartItemsContainer.innerHTML = '';
+function generateOrderNumber() {
+    const now = new Date();
+    const date = now.getDate().toString().padStart(2, '0');
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const year = now.getFullYear().toString();
+    let counter = localStorage.getItem("dailyCounter") || 0;
+    let savedDate = localStorage.getItem("lastOrderDate");
+    const todayStr = `${date}${month}${year}`;
 
-        let totalItems = 0;
-        let totalPrice = 0;
-
-        if (cartItems.length === 0) {
-            cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
-            totalItemsContainer.textContent = '0';
-            totalPriceContainer.textContent = '0.00';
-            return;
-        }
-
-        cartItems.forEach((item, index) => {
-            totalItems += item.quantity;
-            totalPrice += (item.mrp || 0) * item.quantity;
-
-            const cartItem = document.createElement('div');
-            cartItem.classList.add('cart-item');
-            cartItem.innerHTML = `
-                <div class="cart-item-details">
-                    <img src="${item.image || 'https://via.placeholder.com/100'}" alt="${item.name}" width="100">
-                    <h3 class="company-label">${item.company}</h3>
-                    <h2>${item.name}</h2>
-                    <p class="price">Rs. ${(item.mrp || 0).toFixed(2)}</p>
-                    <div class="quantity-selector">
-                        <button class="decrease" data-index="${index}">-</button>
-                        <input type="text" value="${item.quantity}" readonly>
-                        <button class="increase" data-index="${index}">+</button>
-                    </div>
-                </div>
-                <button class="remove-item" data-index="${index}">Remove</button>
-            `;
-            cartItemsContainer.appendChild(cartItem);
-        });
-
-        totalItemsContainer.textContent = totalItems;
-        totalPriceContainer.textContent = totalPrice.toFixed(2);
+    if (savedDate !== todayStr) {
+        counter = 1;
+    } else {
+        counter = parseInt(counter) + 1;
     }
 
-    cartItemsContainer.addEventListener('click', (event) => {
-        let cartItems = [];
-        try {
-            cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-        } catch (e) {
-            console.error("Error parsing cartItems:", e);
-            return;
-        }
-        const index = event.target.dataset.index;
+    localStorage.setItem("dailyCounter", counter);
+    localStorage.setItem("lastOrderDate", todayStr);
+    return `${todayStr}${counter.toString().padStart(7, '0')}`;
+}
 
-        if (index === undefined || !cartItems[index]) return;
+form.addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-        if (event.target.classList.contains('increase')) {
-            cartItems[index].quantity++;
-        } else if (event.target.classList.contains('decrease')) {
-            if (cartItems[index].quantity > 1) {
-                cartItems[index].quantity--;
-            } else {
-                cartItems.splice(index, 1);
-            }
-        } else if (event.target.classList.contains('remove-item')) {
-            cartItems.splice(index, 1);
-        }
+    const formData = new FormData(form);
+    const customerData = {
+        name: formData.get("name"),
+        email: formData.get("email"),
+        phone: formData.get("phone"),
+        address: formData.get("address"),
+        city: formData.get("city"),
+        country: formData.get("country")
+    };
+    console.log("Collected customer data:", customerData);
 
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
-        loadCart();
+    let cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+    console.log("Cart items from localStorage:", cartItems);
+    if (cartItems.length === 0) {
+        console.warn("Cart is empty, no data from cart page");
+        alert("No cart items found. Please add products from the shop page first.");
+        return;
+    }
+    const orderNumber = generateOrderNumber();
+
+    console.log("Sending data:", {
+        orderNumber: orderNumber,
+        customer: customerData,
+        cart: cartItems
     });
 
-    document.getElementById("checkout-button").addEventListener("click", () => {
-        let cartItems = [];
-        try {
-            cartItems = JSON.parse(localStorage.getItem("cartItems") || '[]');
-            console.log("Cart items before checkout:", cartItems);
-        } catch (e) {
-            console.error("Error parsing cartItems:", e);
-            return;
-        }
-        const transformedCart = cartItems.map(item => ({
-            company: item.company || "",
-            productName: item.name || "Unnamed Product",
-            quantity: item.quantity,
-            mrp: item.mrp || 0
-        }));
-        localStorage.setItem("cartItems", JSON.stringify(transformedCart));
-        console.log("Transformed cart for checkout:", transformedCart);
-        window.location.href = "https://romerina.github.io/Romerina/customer-details.html";
-    });
-
-    loadCart();
+    try {
+        const response = await fetch(SCRIPT_WEB_APP_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                orderNumber: orderNumber,
+                customer: customerData,
+                cart: cartItems
+            })
+        });
+        console.log("Fetch response status:", response ? response.status : "No response");
+        alert("Order submitted successfully! Check Drive folder for the invoice.");
+        localStorage.removeItem("cartItems");
+        const phoneNumber = "917907056406";
+        const message = `🛍️ Order Confirmed!\nOrder No: ${orderNumber}\nThank you for shopping with us! Track order via admin.`;
+        const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        window.location.href = whatsappURL;
+    } catch (err) {
+        console.error("Fetch Error:", err);
+        alert("Failed to submit order. Check console for details. Error: " + err.message);
+    }
 });
 
 function oriflame() {
     window.location.href = "oriflame.html";
-}
-
-function home() {
-    window.location.href = "home.html";
-}
-    </script>
+}    </script>
 </body>
 </html>

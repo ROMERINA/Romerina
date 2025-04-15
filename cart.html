@@ -291,14 +291,14 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+       document.addEventListener('DOMContentLoaded', () => {
     const cartItemsContainer = document.querySelector('.cart-items');
     const totalPriceContainer = document.getElementById('total-price');
     const totalItemsContainer = document.getElementById('total-items');
 
     function loadCart() {
         let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        cartItemsContainer.innerHTML = ''; 
+        cartItemsContainer.innerHTML = '';
 
         let totalItems = 0;
         let totalPrice = 0;
@@ -357,22 +357,29 @@
         loadCart();
     });
 
-    // Checkout button logic
+    // ✅ Checkout button logic – does NOT overwrite cartItems
     document.getElementById("checkout-button").addEventListener("click", () => {
         const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+        // Create separate formatted cart for submission
         const transformedCart = cartItems.map(item => ({
             name: item.name,
             company: item.company,
-            mrp: item.price, // Rename price to mrp for consistency
-            productId: item.productId || "", // Default to empty if not present
+            mrp: item.price,
+            productId: item.productId || "",
             quantity: item.quantity
         }));
-        localStorage.setItem("cartItems", JSON.stringify(transformedCart)); // Keep as cartItems
-        window.location.href = "customer-details.html"; // Ensure this matches your file name
+
+        // Save this transformed version to 'cart' key
+        localStorage.setItem("cart", JSON.stringify(transformedCart));
+
+        // Redirect to customer details form
+        window.location.href = "customer-details.html";
     });
 
     loadCart();
 });
+
 
         function oriflame(){
             window.location.href="oriflame.html";

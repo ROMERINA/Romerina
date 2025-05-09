@@ -80,6 +80,15 @@
             <input type="file" id="productImage" accept="image/*" required>
             <img id="imagePreview" class="image-preview" alt="Product Image Preview" />
 
+            <label>Select Collection Page:</label>
+            <select id="collectionPage" required>
+                <option value="kidsandbaby">Kids & Baby</option>
+                <option value="skincare">Skincare</option>
+                <option value="fragrance">Fragrance</option>
+                <option value="outfits">Outfits</option>
+                <option value="wellness">Wellness</option>
+            </select>
+
             <button type="submit">Submit Product</button>
         </form>
     </div>
@@ -104,6 +113,7 @@
             const mrp = document.getElementById("productPrice").value;
             const tooltip = document.getElementById("tooltipText").value;
             const category = document.getElementById("category").value;
+            const collectionPage = document.getElementById("collectionPage").value;
             const imageInput = document.getElementById("productImage");
 
             const reader = new FileReader();
@@ -122,7 +132,8 @@
                             mrp,
                             tooltip,
                             image: imageData,
-                            category
+                            category,
+                            collectionPage
                         })
                     });
 
@@ -132,7 +143,7 @@
                             document.getElementById("productForm").reset();
                             document.getElementById("imagePreview").src = "";
                         } else {
-                            window.location.href = "collection.html";
+                            window.location.href = `${collectionPage}.html`;
                         }
                     } else {
                         alert("Failed to add product. Try again.");

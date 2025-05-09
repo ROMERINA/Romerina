@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Product to Collection</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        h2 {
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+        label {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .image-preview {
+            margin-bottom: 15px;
+            max-width: 100%;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Add New Product</h2>
+        <form id="productForm">
+            <label>Product Name:</label>
+            <input type="text" id="productName" required>
+
+            <label>Company Name:</label>
+            <input type="text" id="companyName" required>
+
+            <label>MRP:</label>
+            <input type="number" id="productPrice" required>
+
+            <label>Tooltip Info:</label>
+            <textarea id="tooltipText" required></textarea>
+
+            <label>Category:</label>
+            <input type="text" id="category" placeholder="e.g., skincare, baby" required>
+
+            <label>Select Image:</label>
+            <input type="file" id="productImage" accept="image/*" required>
+            <img id="imagePreview" class="image-preview" alt="Product Image Preview" />
+
+            <button type="submit">Submit Product</button>
+        </form>
+    </div>
+
+    <script>
+        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxlnXe94pId9U6tip0ppswkx0m9wStwtpwpcDLG1mudbl5vmh3H6zY8lN5HdXowHF_uaA/exec";
+
+        // Image Preview
+        document.getElementById('productImage').addEventListener('change', function (e) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                document.getElementById('imagePreview').src = reader.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        });
+
+        document.getElementById("productForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            
+            const name = document.getElementById("productName").value;
+            const company = document.getElementById("companyName").value;
+            const mrp = document.getElementById("productPrice").value;
+            const tooltip = document.getElementById("tooltipText").value;
+            const category = document.getElementById("category").value;
+            const imageInput = document.getElementById("productImage");
+
+            const reader = new FileReader();
+            reader.onload = async function () {
+                const imageData = reader.result;
+
+                try {
+                    const response = await fetch(SCRIPT_WEB_APP_URL, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            name,
+                            company,
+                            mrp,
+                            tooltip,
+                            image: imageData,
+                            category
+                        })
+                    });
+
+                    if (response.ok) {
+                        alert("Product added successfully!");
+                        if (confirm("Add another product?")) {
+                            document.getElementById("productForm").reset();
+                            document.getElementById("imagePreview").src = "";
+                        } else {
+                            window.location.href = "collection.html";
+                        }
+                    } else {
+                        alert("Failed to add product. Try again.");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    alert("An error occurred. Check console for details.");
+                }
+            };
+
+            if (imageInput.files[0]) {
+                reader.readAsDataURL(imageInput.files[0]);
+            } else {
+                alert("Please upload an image.");
+            }
+        });
+    </script>
+</body>
+</html>

@@ -94,7 +94,7 @@
     </div>
 
     <script>
-        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx9j6Vd_kzAuUEiwSWQ4RbavESkr4OPrsWPLvUf4W_R1NPkwoMELSXACVEmbaeBmh2y/exec";
+        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxPDwBy0Ok3z0Y5hx1xrfDTz4n9hTlXjGDvieizl7uxb2C6XNCDjl6LvkrW5Xd61sUpBQ/exec"; // Replace with your deployed web app URL
 
         // Image Preview
         document.getElementById('productImage').addEventListener('change', function (e) {
@@ -107,7 +107,7 @@
 
         document.getElementById("productForm").addEventListener("submit", async function (e) {
             e.preventDefault();
-            
+
             const name = document.getElementById("productName").value;
             const company = document.getElementById("companyName").value;
             const mrp = document.getElementById("productPrice").value;
@@ -138,15 +138,20 @@
                     });
 
                     if (response.ok) {
-                        alert("Product added successfully!");
-                        if (confirm("Add another product?")) {
-                            document.getElementById("productForm").reset();
-                            document.getElementById("imagePreview").src = "";
+                        const data = await response.json();
+                        if (data.result === "success") {
+                            alert("Product added successfully!");
+                            if (confirm("Add another product?")) {
+                                document.getElementById("productForm").reset();
+                                document.getElementById("imagePreview").src = "";
+                            } else {
+                                window.location.href = `${collectionPage}.html`;
+                            }
                         } else {
-                            window.location.href = `${collectionPage}.html`;
+                            alert(`Failed to add product: ${data.message || "Unknown error"}`);
                         }
                     } else {
-                        alert("Failed to add product. Try again.");
+                        alert("Failed to add product. Server error.");
                     }
                 } catch (error) {
                     console.error("Error:", error);

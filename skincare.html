@@ -236,7 +236,7 @@
     </style>
     <script>
         // Proxy URL (update to Vercel URL after deployment)
-        const PROXY_URL = "https://romerina-proxy.vercel.app/proxy"; // Currently set to placeholder; replace after deployment
+        const PROXY_URL = "https://romerina-proxy.vercel.app/proxy"; // Verify this URL after deployment
         const COLLECTION_PAGE = "skincare"; // Matches this page's category
 
         // Fetch products from the Google Sheet via the proxy
@@ -247,12 +247,13 @@
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json"
-                    }
+                    },
+                    mode: "cors" // Explicitly set CORS mode
                 });
 
                 // Check if the response is ok (status 200-299)
                 if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                    throw new Error(`HTTP error! Status: ${response.status} - ${response.statusText}`);
                 }
 
                 const data = await response.json();
@@ -270,16 +271,31 @@
                 // If no products are found, display a message but keep static products as fallback
                 if (data.length === 0) {
                     console.warn("No products found for this category. Keeping static products as fallback.");
+                    container.insertAdjacentHTML("beforeend", "<p>No products found for this category. Showing default products instead.</p>");
                     return;
                 }
 
                 // Clear static products and display fetched products
                 displayProducts(data);
             } catch (error) {
+                // Enhanced error handling with more specific messages
+                let errorMessage = "Unable to load products. Showing default products instead.";
+                if (error.message.includes("Failed to fetch")) {
+                    errorMessage = "Unable to connect to the server. Please check your internet connection or the proxy server status.";
+                    console.error("Fetch error details:", {
+                        url: PROXY_URL,
+                        collectionPage: COLLECTION_PAGE,
+                        error: error.message
+                    });
+                } else if (error.message.includes("HTTP error")) {
+                    errorMessage = "Server error while loading products. Please try again later.";
+                } else {
+                    errorMessage = `Error loading products: ${error.message}`;
+                }
+
                 console.error("Error fetching products:", error);
-                alert("Failed to load products: " + error.message);
-                // Keep static products as fallback; no need to clear the container
-                container.insertAdjacentHTML("beforeend", "<p>Failed to load dynamic products. Showing static products instead.</p>");
+                alert(errorMessage);
+                container.insertAdjacentHTML("beforeend", `<p>${errorMessage}</p>`);
             }
         }
 

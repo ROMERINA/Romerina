@@ -237,13 +237,47 @@
     <script>
         // Proxy URL (update to Vercel URL after deployment)
         const PROXY_URL = "https://romerina-proxy.vercel.app/proxy"; // Verify this URL after deployment
+        const FALLBACK_PROXY_URL = "https://mock-api.example.com/proxy"; // Replace with a mock server for testing if needed
         const COLLECTION_PAGE = "skincare"; // Matches this page's category
+
+        // Test if the proxy server is reachable
+        async function testProxyServer(url) {
+            try {
+                const response = await fetch(url, {
+                    method: "HEAD", // Use HEAD to minimize data transfer
+                    mode: "cors"
+                });
+                return response.ok;
+            } catch (error) {
+                console.error(`Proxy server test failed for ${url}:`, error);
+                return false;
+            }
+        }
 
         // Fetch products from the Google Sheet via the proxy
         async function fetchProducts() {
             const container = document.querySelector(".product-grid");
+            let proxyUrlToUse = PROXY_URL;
+
+            // Test if the primary proxy server is reachable
+            const isProxyReachable = await testProxyServer(PROXY_URL);
+            if (!isProxyReachable) {
+                console.warn(`Primary proxy server (${PROXY_URL}) is not reachable. Attempting fallback URL: ${FALLBACK_PROXY_URL}`);
+                proxyUrlToUse = FALLBACK_PROXY_URL;
+
+                // Test the fallback proxy server
+                const isFallbackReachable = await testProxyServer(FALLBACK_PROXY_URL);
+                if (!isFallbackReachable) {
+                    const errorMessage = "Unable to connect to any server. Please check your internet connection or the proxy server status on Vercel. Check Vercel logs for more details.";
+                    console.error(errorMessage);
+                    alert(errorMessage);
+                    container.insertAdjacentHTML("beforeend", `<p>${errorMessage}</p>`);
+                    return;
+                }
+            }
+
             try {
-                const response = await fetch(`${PROXY_URL}?collectionPage=${COLLECTION_PAGE}`, {
+                const response = await fetch(`${proxyUrlToUse}?collectionPage=${COLLECTION_PAGE}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json"
@@ -281,14 +315,14 @@
                 // Enhanced error handling with more specific messages
                 let errorMessage = "Unable to load products. Showing default products instead.";
                 if (error.message.includes("Failed to fetch")) {
-                    errorMessage = "Unable to connect to the server. Please check your internet connection or the proxy server status.";
+                    errorMessage = "Unable to connect to the server. Please check your internet connection, ensure the proxy server is running on Vercel, and verify CORS settings.";
                     console.error("Fetch error details:", {
-                        url: PROXY_URL,
+                        url: proxyUrlToUse,
                         collectionPage: COLLECTION_PAGE,
                         error: error.message
                     });
                 } else if (error.message.includes("HTTP error")) {
-                    errorMessage = "Server error while loading products. Please try again later.";
+                    errorMessage = "Server error while loading products. Please check the Vercel logs for more details.";
                 } else {
                     errorMessage = `Error loading products: ${error.message}`;
                 }
@@ -390,6 +424,7 @@
             fetchProducts(); // Attempt to fetch dynamic products
         });
     </script>
+
 </head>
 <body>
     <header>

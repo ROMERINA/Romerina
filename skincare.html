@@ -115,28 +115,26 @@
             padding: 20px;
         }
         .product-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%; /* Ensures all cards have the same height */
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.product-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.product-card img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-}
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
         .company-label {
             font-size: 0.9rem;
             color: #777;
@@ -159,23 +157,22 @@
             margin-top: 10px;
         }
         .add-to-cart {
-    background-color: #A65A46;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background 0.3s ease-in-out;
-    width: 100%;
-    margin-top: auto; /* Ensures it stays at the bottom */
-}
-
-.add-to-cart:hover {
-    background-color: #8C4537;
-}
-.more-options {
+            background-color: #A65A46;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.3s ease-in-out;
+            width: 100%;
+            margin-top: auto;
+        }
+        .add-to-cart:hover {
+            background-color: #8C4537;
+        }
+        .more-options {
             cursor: pointer;
             font-size: 20px;
             font-weight: bold;
@@ -213,23 +210,22 @@
             border-radius: 5px;
         }
         .cart-button {
-    position: fixed;
-    bottom: 40px; /* Adjust to place above the footer */
-    right: 20px;
-    width: 50px;  /* Adjust size as needed */
-    height: 50px; /* Adjust size as needed */
-    cursor: pointer;
-    border-radius: 50%; /* Makes it circular if needed */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    transition: transform 0.3s ease-in-out;
-    background-color: white; /* Add background if needed */
-    padding: 5px;
-}
-
-.cart-button:hover {
-    transform: scale(1.1);
-}
-footer {
+            position: fixed;
+            bottom: 40px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease-in-out;
+            background-color: white;
+            padding: 5px;
+        }
+        .cart-button:hover {
+            transform: scale(1.1);
+        }
+        footer {
             background-color: #1E1E1E;
             color: white;
             text-align: center;
@@ -239,43 +235,123 @@ footer {
         }
     </style>
     <script>
-        function oriflame(){
-            window.location.href="oriflame.html";
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        // Proxy URL (update to Vercel URL after deployment)
+        const PROXY_URL = "https://romerina-proxy.vercel.app/proxy"; // Currently set to placeholder; replace after deployment
+        const COLLECTION_PAGE = "skincare"; // Matches this page's category
 
-    addToCartButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const productCard = button.closest('.product-card');
-            const productName = productCard.querySelector('h2').innerText;
-            const productPrice = parseInt(productCard.querySelector('.price').innerText.replace(/[^\d]/g, ''), 10); // Ensure correct integer price
-            const productImage = productCard.querySelector('img').src;
-            const productCompany = productCard.querySelector('.company-label').innerText;
-
-            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-            const existingItem = cartItems.find(item => item.name === productName);
-
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cartItems.push({
-                    company: productCompany,
-                    name: productName,
-                    price: productPrice,
-                    image: productImage,
-                    quantity: 1
+        // Fetch products from the Google Sheet via the proxy
+        async function fetchProducts() {
+            const container = document.querySelector(".product-grid");
+            try {
+                const response = await fetch(`${PROXY_URL}?collectionPage=${COLLECTION_PAGE}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
                 });
-            }
 
-            localStorage.setItem('cartItems', JSON.stringify(cartItems));
-            alert(`${productName} added to cart!`);
-        });
-    });
-});
-        function home(){
-            window.location.href="home.html";
+                // Check if the response is ok (status 200-299)
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Check if the response indicates an error
+                if (data.result === "error") {
+                    throw new Error(data.message || "Unknown error from proxy server");
+                }
+
+                // Ensure data is an array before proceeding
+                if (!Array.isArray(data)) {
+                    throw new Error("Expected an array of products, but received: " + JSON.stringify(data));
+                }
+
+                // If no products are found, display a message but keep static products as fallback
+                if (data.length === 0) {
+                    console.warn("No products found for this category. Keeping static products as fallback.");
+                    return;
+                }
+
+                // Clear static products and display fetched products
+                displayProducts(data);
+            } catch (error) {
+                console.error("Error fetching products:", error);
+                alert("Failed to load products: " + error.message);
+                // Keep static products as fallback; no need to clear the container
+                container.insertAdjacentHTML("beforeend", "<p>Failed to load dynamic products. Showing static products instead.</p>");
+            }
         }
+
+        // Display fetched products in the product grid
+        function displayProducts(products) {
+            const container = document.querySelector(".product-grid");
+            container.innerHTML = ""; // Clear existing content
+            products.forEach(product => {
+                const card = document.createElement("div");
+                card.className = "product-card";
+                card.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="company-label">${product.company}</div>
+                    <h2>${product.name}</h2>
+                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
+                    <div class="tooltip-box">${product.tooltip || "More details about this product."}</div>
+                    <div class="price">MRP Rs. ${product.mrp}</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                `;
+                container.appendChild(card);
+            });
+
+            // Re-attach event listeners for "Add to Cart" buttons after dynamic rendering
+            attachCartEventListeners();
+        }
+
+        // Attach event listeners for "Add to Cart" buttons
+        function attachCartEventListeners() {
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const productCard = button.closest('.product-card');
+                    const productName = productCard.querySelector('h2').innerText;
+                    const productPrice = parseInt(productCard.querySelector('.price').innerText.replace(/[^\d]/g, ''), 10);
+                    const productImage = productCard.querySelector('img').src;
+                    const productCompany = productCard.querySelector('.company-label').innerText;
+
+                    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+                    const existingItem = cartItems.find(item => item.name === productName);
+
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                    } else {
+                        cartItems.push({
+                            company: productCompany,
+                            name: productName,
+                            price: productPrice,
+                            image: productImage,
+                            quantity: 1
+                        });
+                    }
+
+                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                    alert(`${productName} added to cart!`);
+                });
+            });
+        }
+
+        // Navigation functions
+        function oriflame() {
+            window.location.href = "oriflame.html";
+        }
+
+        function home() {
+            window.location.href = "home.html";
+        }
+
+        function Cart() {
+            window.location.href = "cart.html";
+        }
+
+        // Tooltip toggle functionality
         function toggleTooltip(event, element) {
             let tooltip = element.parentElement.nextElementSibling;
             let isVisible = tooltip.style.display === "block";
@@ -285,14 +361,18 @@ footer {
             }
         }
 
+        // Close tooltips when clicking outside
         document.addEventListener("click", function(event) {
             if (!event.target.classList.contains("more-options")) {
                 document.querySelectorAll(".tooltip-box").forEach(box => box.style.display = "none");
             }
         });
-        function Cart(){
-            window.location.href="cart.html";
-         }
+
+        // Fetch products on page load and attach cart listeners for static products
+        document.addEventListener('DOMContentLoaded', () => {
+            attachCartEventListeners(); // For static products
+            fetchProducts(); // Attempt to fetch dynamic products
+        });
     </script>
 </head>
 <body>
@@ -307,14 +387,14 @@ footer {
             </div>
             <nav>
                 <ul>
-                    <li><a href="#">Home</a></li>
+                    <li><a href="#" onclick="home()">Home</a></li>
                     <li class="dropdown">
                         <a href="#">Shop</a>
-                    <div class="dropdown-menu">
-                    <a href="#" onclick="oriflame()">ORIFLAME</a>
-                    <a href="#" >PILGRIM</a>
-                    <a href="#">OTHER</a>
-                    </div>
+                        <div class="dropdown-menu">
+                            <a href="#" onclick="oriflame()">ORIFLAME</a>
+                            <a href="#">PILGRIM</a>
+                            <a href="#">OTHER</a>
+                        </div>
                     </li>
                     <li><a href="#">About</a></li>
                     <li><a href="#">Contact</a></li>
@@ -326,1240 +406,798 @@ footer {
         <div class="container">
             <div class="section-title">Skincare Collection</div>
             <div class="product-grid">
+                <!-- Static products as fallback -->
                 <div class="product-card">
                     <img src="image1.png" alt="Nourishing Facial Kit with Organic Guarana, Papaya & Pineapple">
                     <div class="company-label">LOVE NATURE</div>
-                    <h2>Nourishing Facial Kit with Organic Guarana, Papaya & Pineapple </h2>
+                    <h2>Nourishing Facial Kit with Organic Guarana, Papaya & Pineapple</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,899</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image2.png" alt="Urban Guard 3D Mist">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Urban Guard 3D Mist </h2>
+                    <h2>Urban Guard 3D Mist</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 749</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image3.png" alt="Radiance Facial Kit with Organic Milk, Honey and Turmeric">
                     <div class="company-label">LOVE NATURE</div>
-                    <h2>Radiance Facial Kit with Organic Milk, Honey and Turmeric </h2>
+                    <h2>Radiance Facial Kit with Organic Milk, Honey and Turmeric</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,899</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image4.png" alt="Serum And Mask Cover">
                     <div class="company-label">-</div>
-                    <h2>Serum And Mask Cover </h2>
+                    <h2>Serum And Mask Cover</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 549</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image5.png" alt="Wrinkle Smooth Routine Mixed">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Wrinkle Smooth Routine Mixed </h2>
+                    <h2>Wrinkle Smooth Routine Mixed</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 12,500</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image6.png" alt="Beam Facial Cleansing Device">
                     <div class="company-label">-</div>
-                    <h2>Beam Facial Cleansing Device </h2>
+                    <h2>Beam Facial Cleansing Device</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 3,499</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image7.png" alt="Urban Guard 3D Night Cream">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Urban Guard 3D Night Cream </h2>
+                    <h2>Urban Guard 3D Night Cream</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,399</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image8.png" alt="Men Intense Anti-Ageing Face Gel Lotion">
                     <div class="company-label">NOVAGE</div>
-                    <h2>Men Intense Anti-Ageing Face Gel Lotion </h2>
+                    <h2>Men Intense Anti-Ageing Face Gel Lotion</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,800</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image9.png" alt="Purifying 2-in-1 Mask & Scrub with Organic Tea Tree & Lime">
                     <div class="company-label">LOVE NATURE</div>
-                    <h2>Purifying 2-in-1 Mask & Scrub with Organic Tea Tree & Lime </h2>
+                    <h2>Purifying 2-in-1 Mask & Scrub with Organic Tea Tree & Lime</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 499</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image10.png" alt="Love Nature Hand Care Kit">
                     <div class="company-label">LOVE NATURE</div>
-                    <h2>Love Nature Hand Care Kit </h2>
+                    <h2>Love Nature Hand Care Kit</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 882</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image11.png" alt="Calming Face Mask with Pro-Vitamin B5 & Lavender Oil">
                     <div class="company-label">ESSENTIALS</div>
-                    <h2>Calming Face Mask with Pro-Vitamin B5 & Lavender Oil </h2>
+                    <h2>Calming Face Mask with Pro-Vitamin B5 & Lavender Oil</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 289</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image12.png" alt="Glow Rise SET">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Glow Rise SET </h2>
+                    <h2>Glow Rise SET</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 6,284</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image13.png" alt="Clarifying Face Mask with Upcycled Verbena">
                     <div class="company-label">LOVE NATURE</div>
-                    <h2>Clarifying Face Mask with Upcycled Verbena </h2>
+                    <h2>Clarifying Face Mask with Upcycled Verbena</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 299</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image14.png" alt="Even Out SET">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Even Out SET </h2>
+                    <h2>Even Out SET</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 7,684</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image15.png" alt="Purifying Corrective Stick with Organic Tea Tree & Lime">
                     <div class="company-label">LOVE NATURE</div>
-                    <h2>Purifying Corrective Stick with Organic Tea Tree & Lime </h2>
+                    <h2>Purifying Corrective Stick with Organic Tea Tree & Lime</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 619</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image16.png" alt="Blemish + Age Defy Routine Light">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Blemish + Age Defy Routine Light </h2>
+                    <h2>Blemish + Age Defy Routine Light</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 12,500</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-
                 <div class="product-card">
                     <img src="image1.png" alt="Blackcurrant Multi-purpose Balm">
                     <div class="company-label">TENDER CARE</div>
-                    <h2>Blackcurrant Multi-purpose Balm </h2>
+                    <h2>Blackcurrant Multi-purpose Balm</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 399</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image2.png" alt="Multi-Active Anti-Ageing Night Cream Light">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Multi-Active Anti-Ageing Night Cream Light </h2>
+                    <h2>Multi-Active Anti-Ageing Night Cream Light</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 2,900</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image3.png" alt="Men Energising & Hydrating Booster">
                     <div class="company-label">NOVAGE</div>
-                    <h2>Men Energising & Hydrating Booster </h2>
+                    <h2>Men Energising & Hydrating Booster</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 2,200</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image4.png" alt="Hydra Radiance Night Cream Light">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Hydra Radiance Night Cream Light </h2>
+                    <h2>Hydra Radiance Night Cream Light</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,199</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image5.png" alt="Raspberry Multi-purpose Balm">
                     <div class="company-label">TENDER CARE</div>
-                    <h2>Raspberry Multi-purpose Balm </h2>
+                    <h2>Raspberry Multi-purpose Balm</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 399</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image6.png" alt="Age Revive Night Cream">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Age Revive Night Cream </h2>
+                    <h2>Age Revive Night Cream</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,849</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image7.png" alt="Lift + Firm Serum">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Lift + Firm Serum </h2>
+                    <h2>Lift + Firm Serum</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 3,100</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image8.png" alt="Hydra Radiance Eye Cream">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Hydra Radiance Eye Cream </h2>
+                    <h2>Hydra Radiance Eye Cream</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 749</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image9.png" alt="Smooth & Balance Gel-Serum">
                     <div class="company-label">WELLOSOPHY</div>
-                    <h2>Smooth & Balance Gel-Serum </h2>
+                    <h2>Smooth & Balance Gel-Serum</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 2,199</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image10.png" alt="Calm & Balance Cleanser">
                     <div class="company-label">WELLOSOPHY</div>
-                    <h2>Calm & Balance Cleanser </h2>
+                    <h2>Calm & Balance Cleanser</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 899</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image11.png" alt="Intense Skin Recharge Overnight Mask">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Intense Skin Recharge Overnight Mask </h2>
+                    <h2>Intense Skin Recharge Overnight Mask</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 2,299</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image12.png" alt="Refresh Gel Cleanser">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Refresh Gel Cleanser </h2>
+                    <h2>Refresh Gel Cleanser</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,800</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image13.png" alt="Replenish & Energise Face Mist">
                     <div class="company-label">WELLOSOPHY</div>
-                    <h2>Replenish & Energise Face Mist </h2>
+                    <h2>Replenish & Energise Face Mist</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 899</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image14.png" alt="Multi-Active Anti-Ageing Day Cream Rich SPF 30">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Multi-Active Anti-Ageing Day Cream Rich SPF 30 </h2>
+                    <h2>Multi-Active Anti-Ageing Day Cream Rich SPF 30</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 2,900</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image15.png" alt="Collection - Natural, Passion Fruit and Watermelon">
                     <div class="company-label">TENDER CARE</div>
-                    <h2>Collection - Natural, Passion Fruit and Watermelon </h2>
+                    <h2>Collection - Natural, Passion Fruit and Watermelon</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,317</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image16.png" alt="Bright Intense Eye Cream">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Bright Intense Eye Cream </h2>
+                    <h2>Bright Intense Eye Cream</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,800</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image1.png" alt="Refreshing Face Wash with Organic Strawberry">
                     <div class="company-label">LOVE NATURE</div>
-                    <h2>Refreshing Face Wash with Organic Strawberry </h2>
+                    <h2>Refreshing Face Wash with Organic Strawberry</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 229</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image2.png" alt="Exfoliate & Energise Mask">
-                    <div class="company-label">WELLOSPHY</div>
-                    <h2>Exfoliate & Energise Mask </h2>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Exfoliate & Energise Mask</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 799</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image3.png" alt="Repairing Night Cream">
                     <div class="company-label">ROYAL VELVET</div>
-                    <h2>Repairing Night Cream </h2>
+                    <h2>Repairing Night Cream</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,999</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image4.png" alt="Mattifying & Cooling Face Lotion">
                     <div class="company-label">PURE SKIN</div>
-                    <h2>Mattifying & Cooling Face Lotion </h2>
+                    <h2>Mattifying & Cooling Face Lotion</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 659</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image5.png" alt="Nourishing Face Cream with Organic Oat & Goji Berry">
                     <div class="company-label">LOVE NATURE</div>
-                    <h2>Nourishing Face Cream with Organic Oat & Goji Berry </h2>
+                    <h2>Nourishing Face Cream with Organic Oat & Goji Berry</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 479</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image6.png" alt="Men SET">
                     <div class="company-label">NOVAGE</div>
-                    <h2>Men SET </h2>
+                    <h2>Men SET</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 6,400</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image7.png" alt="Hydra Radiance SET">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Hydra Radiance SET </h2>
+                    <h2>Hydra Radiance SET</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 6,084</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image8.png" alt="Refreshing Face Wash with Organic Green Tea">
                     <div class="company-label">LOVE NATURE</div>
-                    <h2>Refreshing Face Wash with Organic Green Tea </h2>
+                    <h2>Refreshing Face Wash with Organic Green Tea</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 259</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image9.png" alt="Glow Essentials Mask & Scrub with Vitamins E & B3">
                     <div class="company-label">ESSENTIALS</div>
-                    <h2>Glow Essentials Mask & Scrub with Vitamins E & B3 </h2>
+                    <h2>Glow Essentials Mask & Scrub with Vitamins E & B3</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 229</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image10.png" alt="Eye Reviver">
                     <div class="company-label">-</div>
-                    <h2>Eye Reviver </h2>
+                    <h2>Eye Reviver</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 349</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image11.png" alt="Bright Intense Routine Mixed">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Bright Intense Routine Mixed </h2>
+                    <h2>Bright Intense Routine Mixed</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 12,500</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image12.png" alt="5 Minute Oil-control Clay Mask">
                     <div class="company-label">PURE SKIN</div>
-                    <h2>5 Minute Oil-control Clay Mask </h2>
+                    <h2>5 Minute Oil-control Clay Mask</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 569</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image13.png" alt="Reusable Cotton Pads">
                     <div class="company-label">-</div>
-                    <h2>Reusable Cotton Pads </h2>
+                    <h2>Reusable Cotton Pads</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 499</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image14.png" alt="Green Apple Multi-purpose Balm">
                     <div class="company-label">TENDER CARE</div>
-                    <h2>Green Apple Multi-purpose Balm </h2>
+                    <h2>Green Apple Multi-purpose Balm</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 399</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image15.png" alt="Urban Guard 3D Day Cream SPF 25">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Urban Guard 3D Day Cream SPF 25 </h2>
+                    <h2>Urban Guard 3D Day Cream SPF 25</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,299</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image16.png" alt="Reusable Bamboo Pads">
                     <div class="company-label">-</div>
-                    <h2>Reusable Bamboo Pads </h2>
+                    <h2>Reusable Bamboo Pads</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 399</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
                 <div class="product-card">
                     <img src="image1.png" alt="Bow Headband">
                     <div class="company-label">ORIFLAME</div>
-                    <h2>Bow Headband </h2>
+                    <h2>Bow Headband</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 449</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image2.png" alt="Blackhead Remover Tweezer">
                     <div class="company-label">-</div>
-                    <h2>Blackhead Remover Tweezer </h2>
+                    <h2>Blackhead Remover Tweezer</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 279</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image3.png" alt="Calming Face Wash & Scrub with Pro-Vitamin B5 & Lavender Oil">
                     <div class="company-label">ESSENTIALS</div>
-                    <h2>Calming Face Wash & Scrub with Pro-Vitamin B5 & Lavender Oil </h2>
+                    <h2>Calming Face Wash & Scrub with Pro-Vitamin B5 & Lavender Oil</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 289</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image4.png" alt="Refreshing Face Wash with Organic Pomegranate">
                     <div class="company-label">LOVE NATURE</div>
-                    <h2>Refreshing Face Wash with Organic Pomegranate </h2>
+                    <h2>Refreshing Face Wash with Organic Pomegranate</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 229</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image5.png" alt="Blotting Roller">
                     <div class="company-label">-</div>
-                    <h2>Blotting Roller </h2>
+                    <h2>Blotting Roller</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,149</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image6.png" alt="Soothing Mask with Organic Oat & Goji Berry">
                     <div class="company-label">LOVE NATURE</div>
-                    <h2>Soothing Mask with Organic Oat & Goji Berry </h2>
+                    <h2>Soothing Mask with Organic Oat & Goji Berry</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 499</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image7.png" alt="Lift + Firm Routine Rich">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Lift + Firm Routine Rich </h2>
+                    <h2>Lift + Firm Routine Rich</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 12,500</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image8.png" alt="Smooth & Hydrate Eye Balm">
                     <div class="company-label">WELLOSOPHY</div>
-                    <h2>Smooth & Hydrate Eye Balm </h2>
+                    <h2>Smooth & Hydrate Eye Balm</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 999</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image9.png" alt="SOS Blemish Gel">
                     <div class="company-label">PURE SKIN</div>
-                    <h2>SOS Blemish Gel </h2>
+                    <h2>SOS Blemish Gel</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 399</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image10.png" alt="Intense Nourishment Facial Oil Capsules">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Intense Nourishment Facial Oil Capsules </h2>
+                    <h2>Intense Nourishment Facial Oil Capsules</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 2,999</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image11.png" alt="Age Revive Eye Cream">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Age Revive Eye Cream </h2>
+                    <h2>Age Revive Eye Cream</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 849</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image12.png" alt="Even Out Day Cream SPF 20">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Even Out Day Cream SPF 20 </h2>
+                    <h2>Even Out Day Cream SPF 20</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,549</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image13.png" alt="Hydra Radiance Serum">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Hydra Radiance Serum </h2>
+                    <h2>Hydra Radiance Serum</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,499</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image14.png" alt="Hydra Radiance Day Cream Light">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Hydra Radiance Day Cream Light </h2>
+                    <h2>Hydra Radiance Day Cream Light</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,099</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image15.png" alt="Soothing Micellar Cleansing Water">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Soothing Micellar Cleansing Water </h2>
+                    <h2>Soothing Micellar Cleansing Water</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 749</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image16.png" alt="Glow Essentials Face Cream with Vitamins E & B3 SPF 10">
                     <div class="company-label">ESSENTIALS</div>
-                    <h2>Glow Essentials Face Cream with Vitamins E & B3 SPF 10 </h2>
+                    <h2>Glow Essentials Face Cream with Vitamins E & B3 SPF 10</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 259</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-
                 <div class="product-card">
                     <img src="image1.png" alt="Plump & Balance Face Cream">
-                    <div class="company-label">WELLOSPHY</div>
-                    <h2>Plump & Balance Face Cream </h2>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Plump & Balance Face Cream</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,799</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image2.png" alt="Cream Spatula">
-                    <h2>Cream Spatula </h2>
+                    <div class="company-label">-</div>
+                    <h2>Cream Spatula</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 329</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image3.png" alt="Cocoa Butter Multi-purpose Balm">
                     <div class="company-label">TENDER CARE</div>
-                    <h2>Cocoa Butter Multi-purpose Balm </h2>
+                    <h2>Cocoa Butter Multi-purpose Balm</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 439</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image4.png" alt="Glow Essentials Face Wash with Vitamins E & B3">
                     <div class="company-label">ESSENTIALS</div>
-                    <h2>Glow Essentials Face Wash with Vitamins E & B3 </h2>
+                    <h2>Glow Essentials Face Wash with Vitamins E & B3</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 229</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image5.png" alt="Bright Intense Serum">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Bright Intense Serum </h2>
+                    <h2>Bright Intense Serum</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 3,100</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image6.png" alt="Skin Care Headband">
-                    <h2>Skin Care Headband </h2>
+                    <div class="company-label">-</div>
+                    <h2>Skin Care Headband</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 299</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image7.png" alt="Proceuticals 24h Intense Hydration Power Drops">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Proceuticals 24h Intense Hydration Power Drops </h2>
+                    <h2>Proceuticals 24h Intense Hydration Power Drops</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 2,199</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image8.png" alt="Age Revive Day Cream SPF 15">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Age Revive Day Cream SPF 15 </h2>
+                    <h2>Age Revive Day Cream SPF 15</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,749</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image9.png" alt="CC Cream SPF 30 + UVA Protection">
                     <div class="company-label">GIORDANI GOLD</div>
-                    <h2>CC Cream SPF 30 + UVA Protection </h2>
+                    <h2>CC Cream SPF 30 + UVA Protection</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,399</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image10.png" alt="Even Out Eye Cream">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Even Out Eye Cream </h2>
+                    <h2>Even Out Eye Cream</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 999</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image11.png" alt="Relax & Recharge Sleep Face Elixir">
-                    <div class="company-label">WELLOSPHY</div>
-                    <h2>Relax & Recharge Sleep Face Elixir </h2>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Relax & Recharge Sleep Face Elixir</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,799</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image12.png" alt="Exfoliating Face Scrub">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Exfoliating Face Scrub </h2>
+                    <h2>Exfoliating Face Scrub</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 749</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image13.png" alt="Lift + Firm Eye Cream">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Lift + Firm Eye Cream </h2>
+                    <h2>Lift + Firm Eye Cream</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,800</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image14.png" alt="Multi-Active Anti-Ageing Day Cream Light SPF 30">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Multi-Active Anti-Ageing Day Cream Light SPF 30 </h2>
+                    <h2>Multi-Active Anti-Ageing Day Cream Light SPF 30</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 2,900</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image15.png" alt="Proceuticals Ultra Light UV-Age Day Shield + SPF 50">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Proceuticals Ultra Light UV-Age Day Shield + SPF 50 </h2>
+                    <h2>Proceuticals Ultra Light UV-Age Day Shield + SPF 50</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,999</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image16.png" alt="Purifying Clay Face Mask">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Purifying Clay Face Mask </h2>
+                    <h2>Purifying Clay Face Mask</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 749</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
                 <div class="product-card">
                     <img src="image1.png" alt="Multi-Active Anti-Ageing Night Cream Rich">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Multi-Active Anti-Ageing Night Cream Rich </h2>
+                    <h2>Multi-Active Anti-Ageing Night Cream Rich</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 2,900</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image2.png" alt="Wrinkle Smooth Eye Cream">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Wrinkle Smooth Eye Cream </h2>
+                    <h2>Wrinkle Smooth Eye Cream</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,800</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image3.png" alt="Wrinkle Smooth Serum">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Wrinkle Smooth Serum </h2>
+                    <h2>Wrinkle Smooth Serum</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 3,100</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image4.png" alt="ProCeuticals Retinol Power Drops">
                     <div class="company-label">NOVAGE</div>
-                    <h2>ProCeuticals Retinol Power Drops </h2>
+                    <h2>ProCeuticals Retinol Power Drops</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,999</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image5.png" alt="Even Out Serum">
                     <div class="company-label">OPTIMALS</div>
-                    <h2>Even Out Serum </h2>
+                    <h2>Even Out Serum</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 1,949</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image6.png" alt="Facial Roller">
-                    <div class="company-label">WELLOSPHY</div>
-                    <h2>Facial Roller </h2>
+                    <div class="company-label">WELLOSOPHY</div>
+                    <h2>Facial Roller</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 999</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
                 <div class="product-card">
                     <img src="image7.png" alt="Blemish + Age Defy Serum">
                     <div class="company-label">NOVAGE+</div>
-                    <h2>Blemish + Age Defy Serum </h2>
+                    <h2>Blemish + Age Defy Serum</h2>
                     <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
                     <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
                     <div class="price">MRP Rs. 3,100</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
-                
-                <div class="product-card">
-                    <img src="image8.png" alt="Even Out Night Cream">
-                    <div class="company-label">OPTIMALS</div>
-                    <h2>Even Out Night Cream </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 1,649</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image9.png" alt="Comforting Facial Toner">
-                    <div class="company-label">OPTIMALS</div>
-                    <h2>Comforting Facial Toner </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 769</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image10.png" alt="Facial Detail Cleanser">
-                    <div class="company-label">OPTIMALS</div>
-                    <h2>Facial Detail Cleanser </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 199</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image11.png" alt="Clarifying Creamy Cleanser">
-                    <div class="company-label">OPTIMALS</div>
-                    <h2>Clarifying Creamy Cleanser </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 769</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image12.png" alt="Age Revive Serum">
-                    <div class="company-label">OPTIMALS</div>
-                    <h2>Age Revive Serum </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 1,799</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image13.png" alt="Smooth & Hydrate Eye Balm">
-                    <div class="company-label">WELLOSPHY</div>
-                    <h2>Smooth & Hydrate Eye Balm </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 999</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image14.png" alt="Cold Cream with Vitamin E, Canola Oil & Cocoa Butter">
-                    <div class="company-label">ESSENTIALS</div>
-                    <h2>Cold Cream with Vitamin E, Canola Oil & Cocoa Butter </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 249</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image15.png" alt="Night Restorative Treatment">
-                    <div class="company-label">DIAMOND CELLULAR</div>
-                    <h2>Night Restorative Treatment </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 2,799</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image16.png" alt="Purifying Gel Wash with Organic Tea Tree & Lime">
-                    <div class="company-label">LOVE NATURE</div>
-                    <h2>Purifying Gel Wash with Organic Tea Tree & Lime </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 479</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                <div class="product-card">
-                    <img src="image1.png" alt="Purifying Toner with Organic Tea Tree & Lime">
-                    <div class="company-label">LOVE NATURE</div>
-                    <h2>Purifying Toner with Organic Tea Tree & Lime </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 379</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image2.png" alt="Proceuticals Micro Essence Multi Mist">
-                    <div class="company-label">NOVAGE+</div>
-                    <h2>Proceuticals Micro Essence Multi Mist </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 1,700</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image3.png" alt="Deep Cleanse Face Wash">
-                    <div class="company-label">PURE SKIN</div>
-                    <h2>Deep Cleanse Face Wash </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 659</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image4.png" alt="Glow Essentials Face Cream with Vitamins E & B3">
-                    <div class="company-label">ESSENTIALS</div>
-                    <h2>Glow Essentials Face Cream with Vitamins E & B3 </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 499</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image5.png" alt="Clarifying Toning Solution">
-                    <div class="company-label">PURE SKIN</div>
-                    <h2>Clarifying Toning Solution </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 659</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image6.png" alt="Gua Sha">
-                    <div class="company-label">WELLOSOPHY</div>
-                    <h2>Gua Sha </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 699</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image7.png" alt="Anti-Ageing Cream">
-                    <div class="company-label">DIAMOND CELLULAR</div>
-                    <h2>Anti-Ageing Cream </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 3,199</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image8.png" alt="Natural Multi-purpose Balm">
-                    <div class="company-label">TENDER CARE</div>
-                    <h2>Natural Multi-purpose Balm </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 439</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image9.png" alt="Mattifying Face Lotion with Organic Tea Tree & Lime">
-                    <div class="company-label">LOVE NATURE</div>
-                    <h2>Mattifying Face Lotion with Organic Tea Tree & Lime </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 479</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image10.png" alt="Men Purifying & Exfoliating Cleanser">
-                    <div class="company-label">NOVAGE</div>
-                    <h2>Men Purifying & Exfoliating Cleanser </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 1,100</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image11.png" alt="Men Eye Rescue Gel">
-                    <div class="company-label">NOVAGE</div>
-                    <h2>Men Eye Rescue Gel </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 1,300</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image12.png" alt="Smoothing Face Scrub">
-                    <div class="company-label">PURE SKIN</div>
-                    <h2>Smoothing Face Scrub </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 569</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image13.png" alt="Firming Day Cream SPF 15">
-                    <div class="company-label">ROYAL VELVET</div>
-                    <h2>Firming Day Cream SPF 15 </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 1,899</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image14.png" alt="Head Band">
-                    <div class="company-label">ACCESSORIES</div>
-                    <h2>Head Band </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 279</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image15.png" alt="Cleansing Sponge">
-                    <div class="company-label">ACCESSORIES</div>
-                    <h2>Cleansing Sponge </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 89</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
-                <div class="product-card">
-                    <img src="image16.png" alt="Moisture Quenching Face Mask">
-                    <div class="company-label">OPTIMALS</div>
-                    <h2>Moisture Quenching Face Mask </h2>
-                    <p>Inclusive of all taxes. <span class="more-options" onclick="toggleTooltip(event, this)"></span></p>
-                    <div class="tooltip-box">More details about this product. Additional information goes here to test the scrollbar functionality.</div>
-                     
-                    <div class="price">MRP Rs. 749</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-                
             </div>
         </div>
     </section>
-    <img src="cart.png" alt="Cart" class="cart-button" onclick="Cart()">
+    <img src="cart-icon.png" alt="Cart" class="cart-button" onclick="Cart()">
     <footer>
         <div class="container">
             <p>&copy; 2025 ROMERINA. All rights reserved.</p>
+            <p>Contact us: support@romerina.com | Follow us on social media</p>
         </div>
     </footer>
 </body>

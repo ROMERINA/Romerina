@@ -235,8 +235,8 @@
         }
     </style>
 <script>
-        // Proxy URL (temporary local server for testing)
-        const PROXY_URL = "http://localhost:3000/proxy"; // Run a local server temporarily
+        // Proxy URL (switching back to Vercel for now)
+        const PROXY_URL = "https://romerina-proxy.vercel.app/proxy"; // Revert to Vercel URL
         const FALLBACK_PROXY_URL = "https://jsonplaceholder.typicode.com/posts"; // Real mock API for testing
         const COLLECTION_PAGE = "skincare"; // Matches this page's category
 
@@ -286,7 +286,7 @@
                 // Test the fallback proxy server
                 const isFallbackReachable = await testProxyServer(FALLBACK_PROXY_URL);
                 if (!isFallbackReachable) {
-                    const errorMessage = "Unable to connect to any server. Please ensure the local proxy server is running on http://localhost:3000/proxy, or fix the Vercel deployment (https://romerina-proxy.vercel.app/proxy). Check Vercel logs for more details.";
+                    const errorMessage = "Unable to connect to any server. Possible issues: 1) No internet connection - please check your network. 2) File is being served via 'file://' - serve it using a local HTTP server (e.g., 'live-server'). 3) Proxy server on Vercel is down - check Vercel logs for more details (https://vercel.com/dashboard).";
                     console.error(errorMessage);
                     alert(errorMessage);
                     container.insertAdjacentHTML("beforeend", `<p>${errorMessage}</p>`);
@@ -320,7 +320,7 @@
                         tooltip: `A high-quality ${["cleanser", "moisturizer", "serum", "mask"][index % 4]} for daily skincare. ${item.body.slice(0, 50)}...`, // Contextual tooltip
                         mrp: 499 + (index * 200) // More realistic price range
                     }));
-                    container.insertAdjacentHTML("beforeend", "<p>⚠️ Unable to connect to the primary server. Displaying mock products instead. Please run a local proxy server on http://localhost:3000/proxy or fix the Vercel deployment (https://romerina-proxy.vercel.app/proxy).</p>");
+                    container.insertAdjacentHTML("beforeend", "<p>⚠️ Unable to connect to the primary server. Displaying mock products instead. Please ensure the Vercel proxy server is deployed and running (https://romerina-proxy.vercel.app/proxy).</p>");
                 } else {
                     // Check if the response indicates an error for the primary proxy
                     if (data.result === "error") {
@@ -346,7 +346,7 @@
                 // Enhanced error handling with more specific messages
                 let errorMessage = "Unable to load products. Showing default products instead.";
                 if (error.message.includes("Failed to fetch")) {
-                    errorMessage = "Unable to connect to the server. Please ensure the local proxy server is running on http://localhost:3000/proxy, or fix the Vercel deployment (https://romerina-proxy.vercel.app/proxy). See Vercel logs for details.";
+                    errorMessage = "Unable to connect to the server. Possible issues: 1) No internet connection - please check your network. 2) File is being served via 'file://' - serve it using a local HTTP server (e.g., 'live-server'). 3) Proxy server on Vercel is down - check Vercel logs for more details (https://vercel.com/dashboard).";
                     console.error("Fetch error details:", {
                         url: proxyUrlToUse,
                         collectionPage: COLLECTION_PAGE,

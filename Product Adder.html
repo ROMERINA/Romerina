@@ -71,7 +71,7 @@
             <input type="number" id="productPrice" required>
 
             <label>Tooltip Info:</label>
-            <textarea id="tooltipText" required></textarea>
+            <textarea id="tooltipText"></textarea>
 
             <label>Category:</label>
             <input type="text" id="category" placeholder="e.g., skincare, baby" required>
@@ -94,7 +94,8 @@
     </div>
 
     <script>
-        const SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz2rk29UPRaAKC6h3yAsevHfG8KSB4kLghhAwmSw7yumF3aVXq2ugTzX1uNROAhiBa1/exec"; // Replace with your deployed web app URL
+        // Use the proxy URL (update with your Vercel URL after deployment)
+        const PROXY_URL = "http://localhost:3000/proxy"; // Replace with https://romerina-proxy.vercel.app/proxy after deployment
 
         // Image Preview
         document.getElementById('productImage').addEventListener('change', function (e) {
@@ -121,7 +122,7 @@
                 const imageData = reader.result;
 
                 try {
-                    const response = await fetch(SCRIPT_WEB_APP_URL, {
+                    const response = await fetch(PROXY_URL, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -137,25 +138,21 @@
                         })
                     });
 
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.result === "success") {
-                            alert("Product added successfully!");
-                            if (confirm("Add another product?")) {
-                                document.getElementById("productForm").reset();
-                                document.getElementById("imagePreview").src = "";
-                            } else {
-                                window.location.href = `${collectionPage}.html`;
-                            }
+                    const data = await response.json();
+                    if (data.result === "success") {
+                        alert("Product added successfully!");
+                        if (confirm("Add another product?")) {
+                            document.getElementById("productForm").reset();
+                            document.getElementById("imagePreview").src = "";
                         } else {
-                            alert(`Failed to add product: ${data.message || "Unknown error"}`);
+                            window.location.href = `${collectionPage}.html`;
                         }
                     } else {
-                        alert("Failed to add product. Server error.");
+                        alert(`Failed to add product: ${data.message || "Unknown error"}`);
                     }
                 } catch (error) {
                     console.error("Error:", error);
-                    alert("An error occurred. Check console for details.");
+                    alert("An error occurred: " + error.message);
                 }
             };
 
